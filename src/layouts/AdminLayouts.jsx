@@ -2,10 +2,13 @@ import React from 'react'
 import { Outlet } from 'react-router'
 import Sidebar from '../Components/Sidebar'
 import PageHeading from '../Components/SharedComponents/PageHeading'
+import { message } from 'antd'
 
 function AdminLayouts({ children }) {
+   const [messageApi,contextHolder  ] = message.useMessage();
   return (
     <div className='w-full flex h-screen flex-row items-start text-white overflow-hidden '>
+     {contextHolder}
       <div className='flex flex-row items-start w-full'>
         <Sidebar />
         <div className='flex flex-col gap-5 w-full'>
@@ -16,7 +19,7 @@ function AdminLayouts({ children }) {
           <PageHeading  />
           <div className='px-5 overflow-auto h-[calc(100vh-100px)] scroll-style'>
             {children}
-            <Outlet />
+          <Outlet context={[messageApi]} />
           </div>
         </div>
       </div>

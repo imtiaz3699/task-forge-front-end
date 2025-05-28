@@ -9,7 +9,7 @@ import { BASE_URL, routes } from '../../../utils/config'
 import dayjs from 'dayjs'
 import { useUser } from "../../../context/userContext"
 import * as Yup from 'yup'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 const validationSchema = Yup.object({
     title: Yup.string().required("Title is required"),
     description: Yup.string().required("Description is required."),
@@ -19,6 +19,7 @@ const validationSchema = Yup.object({
     due_date: Yup.string().required("Due date is required."),
 })
 function CreateTask() {
+    const { id } = useParams();
     const { user, token } = useUser();
     const [data, setData] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
@@ -38,15 +39,28 @@ function CreateTask() {
             values.due_date = dayjs(values.due_date).format('YYYY-MM-DD');
             values.created_by = user?._id;
             try {
-                const res = await axios.post(`${BASE_URL}/task/create-task`, values, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+                if (id) {
+                    const res = await axios.put(`${BASE_URL}/task/update-task/${id}`, values, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    if (res?.status === 200) {
+                        alert("Task updated successfully!");
+                        navigate(routes.TASK, { replace: true });
                     }
-                });
-                if (res?.status === 201) {
-                    alert("Task created successfully!");
-                    navigate(routes.TASK, { replace: true });
+                } else {
+                    const res = await axios.post(`${BASE_URL}/task/create-task`, values, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    if (res?.status === 201) {
+                        alert("Task created successfully!");
+                        navigate(routes.TASK, { replace: true });
+                    }
                 }
+
             } catch (e) {
                 console.error('Error creating task:', e);
             }
@@ -57,7 +71,7 @@ function CreateTask() {
             setLoading(true);
             try {
                 const response = await axios.get(`${BASE_URL}/auth/get-users`);
-                response?.data?.forEach((item) => (
+                response?.data?.users?.forEach((item) => (
                     setData(prevData => [...prevData, { label: item.name, value: item._id }])
                 ))
 
@@ -69,10 +83,35 @@ function CreateTask() {
         };
         fetchData();
     }, [])
-
+    useEffect(() => {
+        const fetchSingleUser = async () => {
+            try {
+                const taks = await axios.get(`${BASE_URL}/task/get-single-task/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                if (taks?.status === 200) {
+                    formik.setValues({
+                        title: taks?.data?.task?.title,
+                        description: taks?.data?.task?.description,
+                        assigned_to: taks?.data?.task?.assigned_to?._id,
+                        status: taks?.data?.task?.status,
+                        priority: taks?.data?.task?.priority,
+                        due_date: dayjs(taks?.data?.task?.due_date),
+                    })
+                    console.log(taks?.data?.task?.due_date,'Last masterpiece')
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        fetchSingleUser();
+    }, [id])
     const handleDateChange = (date) => {
         formik.setFieldValue('due_date', dayjs(date));
     }
+    console.log('fasdlfjhsadlfjasdlfhkads')
     return (
         <form onSubmit={formik.handleSubmit} >
             <div className='flex flex-col space-y-5  '>
@@ -112,7 +151,7 @@ function CreateTask() {
                         options={statusOptions}
                         onChange={formik.handleChange}
                         name="status"
-                        value={formik.values.status}
+                        value={formik.values.status ?? ""}
                         error={formik.touched.status && formik.errors.status}
                     />
                 </div>
@@ -127,6 +166,7 @@ function CreateTask() {
                         error={formik.touched.priority && formik.errors.priority}
                     />
                     <DatePicker
+                        prevDisable = {true}
                         label="Due Date"
                         name="due_date"
                         value={dayjs(formik.values.due_date)}
@@ -135,7 +175,7 @@ function CreateTask() {
                 </div>
             </div>
             <div className='flex flex-row items-center w-full justify-end gap-5 mt-5'>
-                <button type='submit' className='cursor-pointer border-[1px] border-blue-500  text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300'>
+                <button onClick={() => navigate(routes.TASK, { replace: true })} type = "button" className='cursor-pointer border-[1px] border-blue-500  text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300'>
                     Cancel
                 </button>
                 <button type='submit' className='cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300'>

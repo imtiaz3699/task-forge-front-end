@@ -4,20 +4,24 @@ import PageHeading from '../../Components/SharedComponents/PageHeading';
 import axios from 'axios';
 import { useUser } from '../../context/userContext';
 import Pagination from '../../Components/SharedComponents/Pagination';
+import { Dropdown, message } from 'antd';
+import { ThreeDots } from '../../utils/icons';
+import { Link, useOutletContext } from 'react-router';
+import dayjs from 'dayjs';
 function Task() {
     const { token } = useUser()
 
     const [data, setData] = React.useState([])
+     const [messageApi] = useOutletContext();
     const [pagination, setPagination] = React.useState({
         page: 1,
         limit: 5,
         totalPages: 2,
         totalRecords: 27,
         total: 20,
-        displayPages:5,
+        displayPages: 5,
     })
-    useEffect(() => {
-        const fetchData = async () => {
+    const fetchData = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}/task/get-task?page=${pagination.page}&limit=${pagination.limit}`, {
                     headers: {
@@ -25,7 +29,7 @@ function Task() {
                         Authorization: `Bearer ${token}` // Uncomment if you need to send a token
                     }
                 });
-                
+
                 if (response?.status === 200) {
                     setData(response?.data?.task);
                     setPagination(prev => ({
@@ -41,29 +45,71 @@ function Task() {
                 console.error('Error fetching data:', e);
             }
         }
+    useEffect(() => {
         fetchData();
     }, [pagination.page, pagination.limit])
     const handlePaginationClick = (value) => {
         if (value === 'next') {
-            if(pagination.totalPages === pagination.page) return;
+            if (pagination.totalPages === pagination.page) return;
             setPagination(prev => ({
                 ...pagination,
-                page:pagination.page + 1,
+                page: pagination.page + 1,
             }))
         } else if (value === 'prev') {
-            if(pagination.page === 1) return;   
+            if (pagination.page === 1) return;
             setPagination(prev => ({
                 ...prev,
-                page:pagination.page -1
+                page: pagination.page - 1
             }))
         } else {
-            if(pagination.page === value) return;
+            if (pagination.page === value) return;
             setPagination(prev => ({
                 ...prev,
                 page: value
             }))
         }
     }
+   
+   
+    const handleDelete = async (id) => {
+        try {
+            const res = await axios.delete(`${BASE_URL}/task/delete-task/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            if(res?.status === 200) {
+                messageApi.open({
+                    type: 'success',
+                    content: 'Task deleted successfully',
+                });
+            }
+            fetchData();
+        } catch (error) {
+            console.error('Error deleting task:', error);
+            messageApi.error("Error deleting task");
+        }
+    }
+    const generateItems = (obj) => {
+        const arr = ['Edit', 'Delete'];
+        return arr.map((element, idx) => {
+            const key = (idx + 1).toString();
+            const isEdit = element === 'Edit';
+            return {
+                key,
+                label: isEdit ? (
+                    <Link to={`${routes.UPDATE_TASK}/${obj._id}`}>
+                        {element}
+                    </Link>
+                ) : (
+                    <div onClick={() => handleDelete(obj._id)}>
+                        {element}
+                    </div>
+                )
+            };
+        });
+    };
+    
     return (
         <div className='pb-20 w-full flex flex-col gap-5'>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
@@ -91,11 +137,15 @@ function Task() {
                             <th scope="col" className="px-6 py-3">
                                 Due Date
                             </th>
+                            <th scope="col" className="px-6 py-3">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {
                             data?.map((element, idx) => {
+                                const items = generateItems(element)
                                 return <tr key={element?._id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {element?.title}
@@ -116,7 +166,12 @@ function Task() {
                                         {element?.priority}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {element?.due_date}
+                                        {dayjs(element?.due_date).format("YYYY-MM-DD")}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <Dropdown trigger={"click"} menu={{ items }} placement="bottomLeft" >
+                                            <div><ThreeDots /></div>
+                                        </Dropdown>
                                     </td>
                                 </tr>
                             })

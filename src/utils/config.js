@@ -1,8 +1,12 @@
 export const BASE_URL = import.meta.env.VITE_BASE_URL;
 export const routes = {
     TASK: "/admin/task",
+    CREATE_TASK: "/admin/create",
+    UPDATE_TASK: "/admin/update-task",
     USERS: "/admin/users",
-    CREATE_TASK: "/admin/create"
+    CREATE_USERS: "/admin/create-user",
+    UPDATE_USERS: "/admin/update-users/:id",
+
 }
 export const statusOptions = [
     {

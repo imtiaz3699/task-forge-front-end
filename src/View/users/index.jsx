@@ -2,10 +2,12 @@ import React from 'react'
 import Pagination from '../../Components/SharedComponents/Pagination'
 import { useUser } from '../../context/userContext'
 import axios from 'axios'
-import { BASE_URL } from '../../utils/config'
+import { BASE_URL, routes } from '../../utils/config'
+import { ThreeDots } from '../../utils/icons'
+import { Button, Dropdown } from 'antd'
+import { Link } from 'react-router'
 function Users() {
   const { token } = useUser()
-
   const [data, setData] = React.useState([])
   const [pagination, setPagination] = React.useState({
     page: 1,
@@ -21,7 +23,7 @@ function Users() {
         const response = await axios.get(`${BASE_URL}/auth/get-users?page=${pagination.page}&limit=${pagination.limit}`, {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}` // Uncomment if you need to send a token
+            Authorization: `Bearer ${token}`
           }
         });
         if (response?.status === 200) {
@@ -33,7 +35,6 @@ function Users() {
             total: response?.data?.total ?? 0,
             page: response?.data?.page,
             limit: response?.data?.limit,
-
           }))
         }
       } catch (e) {
@@ -63,6 +64,51 @@ function Users() {
       }))
     }
   }
+  // const items = [
+  //   {
+  //     key: '1',
+  //     label: (
+  //       <Link to={routes?.EDIT_USER}>
+  //         Edit
+  //       </Link>
+  //     ),
+  //   },
+  //   {
+  //     key: '2',
+  //     label: (
+  //       <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
+  //         2nd menu item
+  //       </a>
+  //     ),
+  //   },
+  //   {
+  //     key: '3',
+  //     label: (
+  //       <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+  //         3rd menu item
+  //       </a>
+  //     ),
+  //   },
+  // ];
+  const generateItems = (obj) => {
+    const arr = ['Edit', 'Delete'];
+    return arr.map((element, idx) => {
+      const key = (idx + 1).toString();
+      const isEdit = element === 'Edit';
+      return {
+        key,
+        label: isEdit ? (
+          <Link to={`${routes.UPDATE_USER}/${obj._id}`}>
+            {element}
+          </Link>
+        ) : (
+          <div onClick={() => handleDelete(obj._id)}>
+            {element}
+          </div>
+        )
+      };
+    });
+  };
   return (
     <div className='pb-20 w-full flex flex-col gap-5'>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
@@ -86,6 +132,7 @@ function Users() {
           <tbody>
             {
               data?.map((element, idx) => {
+                const items = generateItems(element)
                 return <tr key={element?._id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {element?.name}
@@ -97,7 +144,9 @@ function Users() {
                     {element?.role}
                   </td>
                   <td className="px-6 py-4">
-                    
+                    <Dropdown trigger={"click"} menu={{ items }} placement="bottomLeft" >
+                      <div><ThreeDots /></div>
+                    </Dropdown>
                   </td>
                 </tr>
               })

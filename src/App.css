@@ -62,3 +62,32 @@
   background-color: #e2baba;
   border-radius: 10px;
 }
+
+.ant-dropdown-menu{
+  background: #1E2939 !important;
+  color: white !important;
+}
+.ant-dropdown-menu-title-content{
+  color: white !important;
+}
+.ant-dropdown-menu-item:hover{
+  background: #333d4d !important;
+}
+.ant-dropdown-menu{
+  max-height: 300px !important;
+  height: 100% !important;
+  max-width: 200px !important;
+  width:100% !important;
+}
+.ant-dropdown-menu::-webkit-scrollbar{
+  width: 3px; /* Remove extra values */
+  height: 3px;
+}
+.ant-dropdown-menu::-webkit-scrollbar-track{
+ background: transparent;
+}
+
+.ant-dropdown-menu::-webkit-scrollbar-thumb {
+  background-color: #e2baba;
+  border-radius: 10px;
+}

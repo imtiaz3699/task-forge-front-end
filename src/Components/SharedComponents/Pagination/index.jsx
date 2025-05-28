@@ -1,22 +1,31 @@
 import React, { useEffect } from 'react'
 import { generatePageRange } from '../../../utils/helpers'
+import { DropDown as DropDownIcon } from '../../../utils/icons'
+import { Dropdown } from 'antd'
 function Pagination({ pagination, handlePaginationClick }) {
-    const [pages, setPages] = React.useState([])
-    console.log(pagination.page,pagination.totalPages,'paglakjshflajds')
+    const [pages, setPages] = React.useState([]);
+    const [currentPage, setCurrentPage] = React.useState(0);
     useEffect(() => {
         const res = generatePageRange(pagination.page, pagination.totalPages)
-        console.log(res,'fasdfahsldfhasdlk')
-        
+
         if (res?.length < 5 && res?.length > 0 && pagination.totalPages > 5) {
             const arr = Array.from({ length: 5 }, (_, i) => res - i);
-            console.log(arr,'army')
+            console.log(arr, 'army')
             setPages(arr.reverse());
         } else {
-            console.log(res,'army')
+            console.log(res, 'army')
             setPages(res);
         }
     }, [pagination])
-    console.log(pages,'fasdlfspages')
+
+    const items = Array.from({ length: pagination?.totalPages }, (_, i) => i + 1)?.map((element, idx) => {
+        return {
+            key: idx,
+            label: (<div onClick={() => { setCurrentPage(element); handlePaginationClick(element) }}>
+                {element}
+            </div>)
+        }
+    })
     return (
         <div className='w-full flex flex-row items-center justify-end '>
             <div aria-label="Page navigation example">
@@ -31,6 +40,13 @@ function Pagination({ pagination, handlePaginationClick }) {
                         ${pagination?.page === element ? "bg-gray-700 dark:bg-gray-700 dark:text-white" : "dark:bg-gray-800 cursor-pointer"} dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}>{element}</span>
                             </li>
                         })
+                    }
+                    {
+                        pagination?.totalPages > 5 && <li className='flex flex-row gap-2 items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border  border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:bg-gray-800 cursor-pointer dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'>
+                            <Dropdown maxHeight={20} trigger={"click"} menu={{ items }} placement="bottomLeft">
+                                <button className='flex flex-row items-center gap-3'>Page: {currentPage ? currentPage : null} <DropDownIcon /></button>
+                            </Dropdown>
+                        </li>
                     }
                     <li>
                         <span onClick={() => handlePaginationClick('next')}
