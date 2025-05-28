@@ -63,3 +63,25 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+.react-calendar{
+  background-color: #213547 !important;
+}
+.ant-picker-input input{
+  color: #ffffff !important;
+}
+
+.scroll-style::-webkit-scrollbar {
+  width: 3px; /* Remove extra values */
+  height: 3px;
+}
+
+.scroll-style::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-style::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+}

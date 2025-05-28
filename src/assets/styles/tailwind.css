@@ -1532,9 +1532,9 @@ select {
   height: 100%;
 }
 
-.h-screen {
+/* .h-screen {
   height: 100vh;
-}
+} */
 
 .h-95-px {
   height: 95px;
@@ -1878,13 +1878,13 @@ select {
   max-width: 580px;
 }
 
-.min-h-screen {
+/* .min-h-screen {
   min-height: 100vh;
-}
+} */
 
-.min-h-screen-75 {
+/* .min-h-screen-75 {
   min-height: 75vh;
-}
+} */
 
 .min-w-0 {
   min-width: 0px;

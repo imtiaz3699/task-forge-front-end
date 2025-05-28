@@ -8,12 +8,11 @@ import axios from 'axios'
 import { BASE_URL } from '../../utils/config'
 function index() {
     const validationSchema = Yup.object({
-        name: Yup.string().required('Name is required'),
-        email: Yup.string().email('Invalid email address').required('Email is required'),
-        password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-        role: Yup.string().required('Role is required'),
+        name: Yup.string().required('Name is required.'),
+        email: Yup.string().email('Invalid email address.').required('Email is required.'),
+        password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required.'),
+        role: Yup.string().required('Role is required.'),
     });
-
 
     const formik = useFormik({
         initialValues: {
@@ -26,12 +25,9 @@ function index() {
         onSubmit: async (values, { setSubmitting, resetForm }) => {
             try {
                 const response = await axios.post(BASE_URL + '/auth/register', values);
-                console.log('Success:', response.data);
                 alert('User registered successfully!');
-                resetForm(); // clear the form
-
+                resetForm();
             } catch (error) {
-                console.error('Error:', error);
                 alert('Registration failed. Please try again.');
             } finally {
                 setSubmitting(false);
