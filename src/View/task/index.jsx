@@ -15,10 +15,10 @@ function Task() {
      const [messageApi] = useOutletContext();
     const [pagination, setPagination] = React.useState({
         page: 1,
-        limit: 5,
-        totalPages: 2,
-        totalRecords: 27,
-        total: 20,
+        limit: 10,
+        totalPages: 0,
+        totalRecords: 0,
+        total: 0,
         displayPages: 5,
     })
     const fetchData = async () => {
@@ -86,7 +86,6 @@ function Task() {
             }
             fetchData();
         } catch (error) {
-            console.error('Error deleting task:', error);
             messageApi.error("Error deleting task");
         }
     }
@@ -109,7 +108,6 @@ function Task() {
             };
         });
     };
-    
     return (
         <div className='pb-20 w-full flex flex-col gap-5'>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
@@ -178,7 +176,6 @@ function Task() {
                         }
                     </tbody>
                 </table>
-
             </div>
             <Pagination pagination={pagination} handlePaginationClick={handlePaginationClick} />
         </div>

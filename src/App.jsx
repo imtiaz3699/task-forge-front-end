@@ -9,16 +9,16 @@ import Users from './View/users';
 import Task from './View/task';
 import CreateTask from './View/task/create';
 import { message } from 'antd';
+import CreateUser from './View/users/create';
 function App() {
   const [count, setCount] = useState(0)
   const [messageApi, contextHolder] = message.useMessage();
   return (
     
-    <div className= 'w-full bg-gray-900'>
+    <div className= 'w-full bg-gray-900 h-screen'>
    {contextHolder}
    <BrowserRouter>
     <Routes>
-    
       {/* add routes with layouts */}
       <Route path="/" element={<Auth/>} />
       <Route path="/auth/signup" element={<Signup/>} />
@@ -26,6 +26,8 @@ function App() {
       {/* <Route path="dashboard" element={<Dashboard/>} />
         <Route path="users" element={<div>Users</div>} /> */}
         <Route path="users" element={<Users/>} />
+        <Route path="create-user" element={<CreateUser/>} />
+        
         <Route path="task" element={<Task/>} />
         <Route path="create" element={<CreateTask/>} />
         <Route path="update-task/:id" element={<CreateTask/>} />

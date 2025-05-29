@@ -17,30 +17,28 @@ function Users() {
     total: 0,
     displayPages: 5,
   })
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/auth/get-users?page=${pagination.page}&limit=${pagination.limit}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
-        });
-        if (response?.status === 200) {
-          setData(response?.data?.users);
-          setPagination(prev => ({
-            ...prev,
-            totalPages: response?.data?.totalPages ?? 0,
-            totalRecords: response?.data?.totalRecords ?? 0,
-            total: response?.data?.total ?? 0,
-            page: response?.data?.page,
-            limit: response?.data?.limit,
-          }))
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/auth/get-users?page=${pagination.page}&limit=${pagination.limit}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         }
-      } catch (e) {
-        console.error('Error fetching data:', e);
+      });
+      if (response?.status === 200) {
+        setData(response?.data?.users);
+        setPagination(prev => ({
+          ...prev,
+          totalPages: response?.data?.totalPages,
+          totalRecords: response?.data?.totalRecords,
+          total: response?.data?.total
+        }))
       }
+    } catch (e) {
+      console.error('Error fetching data:', e);
     }
+  }
+  React.useEffect(() => {
     fetchData();
   }, [pagination.page, pagination.limit])
   const handlePaginationClick = (value) => {

@@ -31,9 +31,14 @@ function PageHeading({ url }) {
                 break;
             case routes.USERS:
                 setData({
-                    heading: "Users",
-                    button: "Create User",
-                    navigate: routes.CREATE_USERS
+                    heading:"Users",
+                    button:"Create User",
+                    navigate:routes.CREATE_USERS
+                })
+                break;
+            case routes.CREATE_USERS:
+                setData({
+                    heading: "Create A New User",
                 })
                 break;
             default:
@@ -47,7 +52,7 @@ function PageHeading({ url }) {
     }
     useEffect(() => {
         getHeading(location.pathname);
-    }, [location.pathname])
+    }, [location.pathname,routes])
 
     return (
         <div className='w-full flex flex-row items-center justify-between px-5'>
