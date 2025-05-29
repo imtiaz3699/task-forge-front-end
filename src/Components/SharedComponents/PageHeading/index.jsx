@@ -36,6 +36,13 @@ function PageHeading({ url }) {
                     navigate:routes.CREATE_USERS
                 })
                 break;
+            case routes.TEAMS:
+                setData({
+                    heading:"Teams",
+                    button:"Create Teams",
+                    navigate:routes.CREATE_TEAMS
+                })
+                break;
             case routes.CREATE_USERS:
                 setData({
                     heading: "Create A New User",

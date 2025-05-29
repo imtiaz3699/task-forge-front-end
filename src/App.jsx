@@ -10,6 +10,8 @@ import Task from './View/task';
 import CreateTask from './View/task/create';
 import { message } from 'antd';
 import CreateUser from './View/users/create';
+import Teams from './View/teams';
+import CreateTeams from './View/teams/Create';
 function App() {
   const [count, setCount] = useState(0)
   const [messageApi, contextHolder] = message.useMessage();
@@ -23,14 +25,19 @@ function App() {
       <Route path="/" element={<Auth/>} />
       <Route path="/auth/signup" element={<Signup/>} />
       <Route path="/admin" element={<AdminLayouts/>} >
-      {/* <Route path="dashboard" element={<Dashboard/>} />
-        <Route path="users" element={<div>Users</div>} /> */}
         <Route path="users" element={<Users/>} />
         <Route path="create-user" element={<CreateUser/>} />
+        <Route path="update-user/:id" element={<CreateUser/>} />
         
         <Route path="task" element={<Task/>} />
         <Route path="create" element={<CreateTask/>} />
         <Route path="update-task/:id" element={<CreateTask/>} />
+
+
+        {/* teams */}
+        <Route path = "teams" element = {<Teams/>} />
+        <Route path = "create-teams" element = {<CreateTeams/>} />
+
       </Route>
       {/* add redirect for first page */}
     </Routes>

@@ -3,7 +3,7 @@ import React from 'react'
 function index({ label, placeholder, onChange, value, name, error, disabled, color }) {
     return (
         <div className="relative w-full ">
-            <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+            <label className="block text-blueGray-600 text-xs font-bold mb-2"
                 htmlFor="grid-password">
                 {label}
             </label>

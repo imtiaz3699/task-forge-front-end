@@ -5,7 +5,9 @@ export const routes = {
     UPDATE_TASK: "/admin/update-task",
     USERS: "/admin/users",
     CREATE_USERS: "/admin/create-user",
-    UPDATE_USERS: "/admin/update-users/:id",
+    UPDATE_USERS: "/admin/update-user",
+    TEAMS:"/admin/teams",
+    CREATE_TEAMS:"/admin/create-teams"
 
 }
 export const statusOptions = [

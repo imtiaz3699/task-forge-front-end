@@ -22,7 +22,7 @@ function Task() {
         displayPages: 5,
     })
     const fetchData = async () => {
-            try {
+        try {
                 const response = await axios.get(`${BASE_URL}/task/get-task?page=${pagination.page}&limit=${pagination.limit}`, {
                     headers: {
                         'Content-Type': 'application/json',

@@ -1,15 +1,15 @@
-import React from "react";
-import Pagination from "../../Components/SharedComponents/Pagination";
-import { useUser } from "../../context/userContext";
-import axios from "axios";
-import { BASE_URL, routes } from "../../utils/config";
-import { ThreeDots } from "../../utils/icons";
-import { Button, Dropdown } from "antd";
-import { Link } from "react-router";
-import { useOutletContext } from "react-router";
-function Users() {
-  const [messageApi] = useOutletContext();
-  const { token } = useUser();
+import React from 'react'
+import Pagination from '../../Components/SharedComponents/Pagination';
+import { Dropdown } from 'antd';
+import { ThreeDots } from '../../utils/icons';
+import { Link, useOutletContext } from 'react-router';
+import { BASE_URL, routes } from '../../utils/config';
+import { useUser } from '../../context/userContext';
+import axios from 'axios';
+
+function Teams() {
+    const [messageApi] = useOutletContext();
+  const { token,user } = useUser();
   const [data, setData] = React.useState([]);
   const [pagination, setPagination] = React.useState({
     page: 1,
@@ -22,7 +22,7 @@ function Users() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/auth/get-users?page=${pagination.page}&limit=${pagination.limit}`,
+        `${BASE_URL}/teams/get-teams?page=${pagination.page}&limit=${pagination.limit}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -30,8 +30,9 @@ function Users() {
           },
         }
       );
+      console.log(response,'totalRecords213131')
       if (response?.status === 200) {
-        setData(response?.data?.users);
+        setData(response?.data?.data);
         setPagination((prev) => ({
           ...prev,
           totalPages: response?.data?.totalPages,
@@ -69,7 +70,7 @@ function Users() {
   };
   const handleDelete = async (id) => {
     try {
-      const res = await axios.delete(`${BASE_URL}/auth/delete-user/${id}`, {
+      const res = await axios.delete(`${BASE_URL}/teams/delete-teams/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,6 +101,7 @@ function Users() {
       };
     });
   };
+  console.log(user,'useradsfad1')
   return (
     <div className="pb-20 w-full flex flex-col gap-5">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
@@ -107,13 +109,13 @@ function Users() {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Name
+                Team Title
               </th>
               <th scope="col" className="px-6 py-3">
-                Email
+                Team Members
               </th>
               <th scope="col" className="px-6 py-3">
-                Role
+                Created By
               </th>
               <th scope="col" className="px-6 py-3">
                 Actions
@@ -132,10 +134,10 @@ function Users() {
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {element?.name}
+                    {element?.team_title}
                   </th>
-                  <td className="px-6 py-4">{element?.email}</td>
-                  <td className="px-6 py-4">{element?.role}</td>
+                  <td className="px-6 py-4">{"Team members"}</td>
+                  <td className="px-6 py-4">{element?.created_by?.name}</td>
                   <td className="px-6 py-4">
                     <Dropdown
                       trigger={"click"}
@@ -158,7 +160,7 @@ function Users() {
         handlePaginationClick={handlePaginationClick}
       />
     </div>
-  );
+  )
 }
 
-export default Users;
+export default Teams

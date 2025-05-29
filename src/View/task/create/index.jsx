@@ -30,6 +30,7 @@ function CreateTask() {
             title: '',
             description: '',
             assigned_to: '',
+            created_by:user?._id,
             status: '',
             priority: '',
             due_date: dayjs(new Date())
@@ -37,7 +38,6 @@ function CreateTask() {
         validationSchema,
         onSubmit: async (values, { isSubmitting }) => {
             values.due_date = dayjs(values.due_date).format('YYYY-MM-DD');
-            values.created_by = user?._id;
             try {
                 if (id) {
                     const res = await axios.put(`${BASE_URL}/task/update-task/${id}`, values, {

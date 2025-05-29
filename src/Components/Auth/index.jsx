@@ -89,8 +89,8 @@ function index() {
                                         Sign In
                                     </button>
                                 </div>
-                                <div className="flex flex-wrap  relative text-white">
-                                    <div className="w-1/2 ">
+                                <div className="flex flex-wrap relative text-white">
+                                    <div className="w-1/2">
                                         <a
                                             href="#pablo"
                                             onClick={(e) => e.preventDefault()}
@@ -108,7 +108,6 @@ function index() {
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
