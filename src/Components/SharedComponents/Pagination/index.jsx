@@ -10,10 +10,8 @@ function Pagination({ pagination, handlePaginationClick }) {
 
         if (res?.length < 5 && res?.length > 0 && pagination.totalPages > 5) {
             const arr = Array.from({ length: 5 }, (_, i) => res - i);
-            console.log(arr, 'army')
             setPages(arr.reverse());
         } else {
-            console.log(res, 'army')
             setPages(res);
         }
     }, [pagination])

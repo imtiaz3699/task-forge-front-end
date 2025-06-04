@@ -8,6 +8,7 @@ import { BASE_URL } from '../../utils/config';
 import {useUser} from '../../context/userContext'
 import Cookies from 'js-cookie';
 import { routes } from '../../utils/config';
+import { Spin } from 'antd';
 const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Email is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
@@ -40,6 +41,9 @@ function index() {
             }
         }
     })
+    if(token) {
+        return <div className = 'w-full h-[100vh] flex items-center justify-center'> <Spin spinning={true}  /></div>
+    }
     return (
         <div className="container mx-auto px-4 h-full ">
             <div className="flex content-center items-center justify-center h-full">
@@ -60,27 +64,14 @@ function index() {
                                     error={formik.errors.email}
                                 />
                                 <CustomInput
-                                    label="Email"
+                                    label="Password"
                                     placeholder={"Enter your password..."}
                                     name="password"
                                     disabled={formik.isSubmitting}
                                     onChange={formik.handleChange}
                                     value={formik.values.password}
                                     error={formik.errors.password}
-                                />
-                                {/* <div>
-                                    <label className="inline-flex items-center cursor-pointer">
-                                        <input
-                                            id="customCheckLogin"
-                                            type="checkbox"
-                                            className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
-                                        />
-                                        <span className="ml-2 text-sm font-semibold text-blueGray-600">
-                                            Remember me
-                                        </span>
-                                    </label>
-                                </div> */}
-                                
+                                />                                
                                 <div className="text-center mt-6">
                                     <button
                                         className="bg-gray-800 cursor-pointer text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"

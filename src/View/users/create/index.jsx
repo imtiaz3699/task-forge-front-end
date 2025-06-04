@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useUser } from "../../../context/userContext";
-import { useNavigate, useLocation, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useFormik } from "formik";
 import axios from "axios";
 import { BASE_URL, routes } from "../../../utils/config";
 import CustomInput from "../../../Components/SharedComponents/CustomInput";
 import CustomSelect from "../../../Components/SharedComponents/CustomSelect";
-import { Link } from "react-router";
 import * as Yup from "yup";
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -23,7 +22,7 @@ function CreateUser() {
       password: "",
       role: "",
       name: "",
-      created_by:user?._id
+      created_by: user?._id,
     },
     validationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
@@ -67,24 +66,26 @@ function CreateUser() {
     },
   });
   const fetchSingleUser = async () => {
-    try {
-      const user = await axios.get(`${BASE_URL}/auth/get-single-user/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(user, "fasdlfjhasdfkjhasdfjkas");
-      if (user?.status === 200) {
-        formik.setValues({
-          email: user?.data?.email,
-          password: user?.data?.password ?? "",
-          role: user?.data?.role,
-          name: user?.data?.name,
+    if (!id) {
+      return;
+    } else {
+      try {
+        const user = await axios.get(`${BASE_URL}/auth/get-single-user/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-        // console.log(taks?.data?.task?.due_date, "Last masterpiece");
+        if (user?.status === 200) {
+          formik.setValues({
+            email: user?.data?.email,
+            password: user?.data?.password ?? "",
+            role: user?.data?.role,
+            name: user?.data?.name,
+          });
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
   };
   useEffect(() => {
@@ -98,7 +99,7 @@ function CreateUser() {
             className="flex flex-col gap-5 w-full"
             onSubmit={formik.handleSubmit}
           >
-            <div className="w-full flex flex-row gap-5 justify-between ">
+            <div className="w-full flex flex-row gap-5 justify-between">
               <CustomInput
                 label="Name"
                 placeholder={"Enter your name..."}
@@ -144,11 +145,10 @@ function CreateUser() {
 
             <div className="flex items-center justify-end w-full mt-6">
               <button
-                className="bg-gray-800 cursor-pointer text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1  ease-linear transition-all duration-150"
-                type="submit">
-               {
-                id ? "Update User" : "Create User"
-               }
+                className="bg-gray-800 cursor-pointer text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="submit"
+              >
+                {id ? "Update User" : "Create User"}
               </button>
             </div>
           </form>

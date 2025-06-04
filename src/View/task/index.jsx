@@ -39,8 +39,6 @@ function Task() {
                         total: response?.data?.total
                     }))
                 }
-                console.log(response, 'responsefemal'
-                );
             } catch (e) {
                 console.error('Error fetching data:', e);
             }
