@@ -91,3 +91,21 @@
   background-color: #e2baba;
   border-radius: 10px;
 }
+
+.ant-select-selector{
+  height: 30px !important;
+}
+
+.ant-select-selection-wrap{
+  background: transparent !important;
+}
+
+.ant-select-selector{
+  background-color: transparent !important;
+  color: white !important;
+  height: 40px !important;
+}
+.ant-select-selection-item{
+  background-color: gray !important;
+  
+}

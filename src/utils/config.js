@@ -7,8 +7,8 @@ export const routes = {
     CREATE_USERS: "/admin/create-user",
     UPDATE_USERS: "/admin/update-user",
     TEAMS:"/admin/teams",
-    CREATE_TEAMS:"/admin/create-teams"
-
+    CREATE_TEAMS:"/admin/create-teams",
+    UPDATE_TEAMS:"/admin/update-teams"
 }
 export const statusOptions = [
     {

@@ -46,6 +46,7 @@ function App() {
             {/* teams */}
             <Route path="teams" element={<Teams />} />
             <Route path="create-teams" element={<CreateTeams />} />
+            <Route path="update-teams/:id" element={<CreateTeams />} />
           </Route>
           {/* add redirect for first page */}
         </Routes>

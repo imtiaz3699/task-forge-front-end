@@ -13,24 +13,32 @@ function CustomSelect({
   multiSelect,
 }) {
    const filteredOptions = options.filter(o => !value.includes(o?.value));
-   console.log(filteredOptions,'adlfjkhasdlkfjs')
-   console.log(value,'filteredOptions234354354')
-   const handleChange = (value) =>  {
-    console.log(value)
-   }
+   console.log(value,'fasdlfjhasldfjhasdfjhasjkfa')
   return (
     <>
       {" "}
       {multiSelect ? (
+        <div className = 'w-full'>
+        <label
+            for="countries"
+            className={`block mb-2 text-sm  font-medium ${
+              color ? "text-white" : "text-gray-900"
+            }  `}
+          >
+            {label}
+          </label>
         <Select
           mode="multiple"
           allowClear
           name = {name}
           style={{ width: "100%" }}
-          placeholder="Please select"
+          value={value}
+          labelRender={value}
+          placeholder={<p className = 'text-white'>Please select</p>}
           onChange={onChange}
           options={filteredOptions}
         />
+        </div>
       ) : (
         <div className="w-full">
           <label

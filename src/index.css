@@ -85,3 +85,7 @@ button:focus-visible {
   background-color: #555;
   border-radius: 10px;
 }
+
+.ant-select-selection-wrap{
+  background: transparent !important;
+}

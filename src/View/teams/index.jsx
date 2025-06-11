@@ -94,14 +94,13 @@ function Teams() {
       return {
         key,
         label: isEdit ? (
-          <Link to={`${routes.UPDATE_USERS}/${obj._id}`}>{element}</Link>
+          <Link to={`${routes.UPDATE_TEAMS}/${obj._id}`}>{element}</Link>
         ) : (
           <div onClick={() => handleDelete(obj._id)}>{element}</div>
         ),
       };
     });
   };
-  console.log(user,'useradsfad1')
   return (
     <div className="pb-20 w-full flex flex-col gap-5">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">

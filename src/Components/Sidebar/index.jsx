@@ -19,6 +19,15 @@ function Sidebar() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const isUserActive = location.pathname === routes.CREATE_USERS ||
+    location.pathname === routes.USERS ||
+    location.pathname.startsWith(routes.UPDATE_USERS);
+  const isTeamActive = location.pathname === routes.CREATE_TEAMS ||
+    location.pathname === routes.TEAMS ||
+    location.pathname.startsWith(routes.UPDATE_TEAMS); 
+  const isTaskActive = location.pathname === routes.TASK ||
+    location.pathname === routes.CREATE_TASK ||
+    location.pathname.startsWith(routes.UPDATE_TASK);  
   return (
     <div className="">
       <button
@@ -54,12 +63,7 @@ function Sidebar() {
               <Link to={routes?.TASK}>
                 <div
                   className={`flex items-center cursor-pointer p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    [
-                      routes?.TASK,
-                      routes?.CREATE_TASK,
-                      routes?.UPDATE_TASK,
-                    ].includes(location.pathname)
-                      ? "bg-gray-100 dark:bg-gray-700"
+                    isTaskActive ? "bg-gray-100 dark:bg-gray-700"
                       : ""
                   } group `}
                 >
@@ -81,13 +85,7 @@ function Sidebar() {
               <Link to={routes?.USERS}>
                 <div
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    [
-                      routes?.CREATE_USERS,
-                      routes.USERS,
-                      routes.UPDATE_USERS,
-                    ]?.includes(location.pathname)
-                      ? "bg-gray-100 dark:bg-gray-700"
-                      : ""
+                    isUserActive ? "bg-gray-100 dark:bg-gray-700" : ""
                   }  group`}
                 >
                   <svg
@@ -107,10 +105,7 @@ function Sidebar() {
               <Link to={routes?.TEAMS}>
                 <div
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    [routes?.TEAMS, routes.CREATE_TEAMS]?.includes(
-                      location.pathname
-                    )
-                      ? "bg-gray-100 dark:bg-gray-700"
+                    isTeamActive ? "bg-gray-100 dark:bg-gray-700"
                       : ""
                   }  group`}
                 >
