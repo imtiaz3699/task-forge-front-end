@@ -39,7 +39,6 @@ function Permissions({ children }) {
     }
     return isAllowed;
   };
-  console.log(user,'fasdlfjkhasdlfhasldh')
   const isAllowed = verifyPermissions();
   return <>{isAllowed ? <div>{children}</div> : <NotAuthorized />}</>;
 }
