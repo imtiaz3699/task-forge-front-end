@@ -13,7 +13,7 @@ function CustomSelect({
   multiSelect,
 }) {
    const filteredOptions = options.filter(o => !value.includes(o?.value));
-   console.log(value,'fasdlfjhasldfjhasdfjhasjkfa')
+   
   return (
     <>
       {" "}
@@ -48,7 +48,6 @@ function CustomSelect({
             }  `}
           >
             {label}
-            {console.log("initlacommit")}
           </label>
           <select
             onChange={onChange}

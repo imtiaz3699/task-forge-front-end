@@ -3,6 +3,7 @@ import { Outlet } from 'react-router'
 import Sidebar from '../Components/Sidebar'
 import PageHeading from '../Components/SharedComponents/PageHeading'
 import { message } from 'antd'
+import Permissions from '../Components/SharedComponents/Permissions/Permissions'
 
 function AdminLayouts({ children }) {
    const [messageApi,contextHolder  ] = message.useMessage();
@@ -16,11 +17,13 @@ function AdminLayouts({ children }) {
             <div>Logo</div>
             <div>Buttons</div>
           </nav>
+          <Permissions>
           <PageHeading  />
-          <div className='px-5 overflow-auto h-[calc(100vh-100px)] scroll-style'>
+          <div className='px-5 overflow-auto h-[calc(100vh-100px)] scroll-style mt-5'>
             {children}
           <Outlet context={[messageApi]} />
           </div>
+          </Permissions>
         </div>
       </div>
     </div>

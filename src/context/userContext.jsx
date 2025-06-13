@@ -25,10 +25,6 @@ export const UserProvider = ({ children }) => {
     }
     setLoading(false); // done checking
   }, [token, pathName, navigate]);
-  if (loading) {
-    return <div className = 'w-full h-[100vh] flex items-center justify-center'> <Spin spinning={loading}  /></div>; // or a spinner
-  }
-
   return (
     <UserContext.Provider value={{ user, setUser, token, setToken }}>
       {children}

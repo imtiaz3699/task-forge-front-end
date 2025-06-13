@@ -8,6 +8,7 @@ import { Dropdown, message } from 'antd';
 import { ThreeDots } from '../../utils/icons';
 import { Link, useOutletContext } from 'react-router';
 import dayjs from 'dayjs';
+import Permissions from '../../Components/SharedComponents/Permissions/Permissions';
 function Task() {
     const { token } = useUser()
 
@@ -107,6 +108,8 @@ function Task() {
         });
     };
     return (
+        <>
+        
         <div className='pb-20 w-full flex flex-col gap-5'>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -177,6 +180,7 @@ function Task() {
             </div>
             <Pagination pagination={pagination} handlePaginationClick={handlePaginationClick} />
         </div>
+        </>
     )
 }
 

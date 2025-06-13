@@ -124,8 +124,9 @@ function CreateUser() {
                 color={true}
                 label="Role"
                 options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "Member", value: "member" },
+                  { label: "Employee", value: "member" },
+                  { label: "Manager", value: "manager" },
+                  { label: "Team Lead", value: "team_lead" },
                 ]}
                 onChange={formik.handleChange}
                 name="role"
