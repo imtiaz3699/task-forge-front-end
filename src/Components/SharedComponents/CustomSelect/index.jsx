@@ -48,6 +48,7 @@ function CustomSelect({
             }  `}
           >
             {label}
+            {console.log("initlacommit")}
           </label>
           <select
             onChange={onChange}
