@@ -15,46 +15,48 @@ import CreateTeams from "./View/teams/Create";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import { UserProvider } from "./context/userContext";
 import TaskList from "./View/teams/task";
+import CreateTeamsTask from "./View/teams/task/create";
 function App() {
   const [count, setCount] = useState(0);
-  
-  const [messageApi,contextHolder  ] = message.useMessage();
+
+  const [messageApi, contextHolder] = message.useMessage();
   return (
     <div className="w-full bg-gray-900 h-screen">
       {contextHolder}
       <BrowserRouter>
         <UserProvider>
-        <Routes>
-          {/* add routes with layouts */}
-          <Route path="/" element={<Auth />} />
-          <Route path="/auth/signup" element={<Signup />} />
+          <Routes>
+            {/* add routes with layouts */}
+            <Route path="/" element={<Auth />} />
+            <Route path="/auth/signup" element={<Signup />} />
 
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <AdminLayouts />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="users" element={<Users />} />
-            <Route path="create-user" element={<CreateUser />} />
-            <Route path="update-user/:id" element={<CreateUser />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminLayouts />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="users" element={<Users />} />
+              <Route path="create-user" element={<CreateUser />} />
+              <Route path="update-user/:id" element={<CreateUser />} />
 
-            <Route path="task" element={<Task />} />
-            <Route path="create" element={<CreateTask />} />
-            <Route path="update-task/:id" element={<CreateTask />} />
+              <Route path="task" element={<Task />} />
+              <Route path="create" element={<CreateTask />} />
+              <Route path="update-task/:id" element={<CreateTask />} />
 
-            {/* teams */}
-            <Route path="teams" element={<Teams />} />
-            <Route path="create-teams" element={<CreateTeams />} />
-            <Route path="update-teams/:id" element={<CreateTeams />} />
-            <Route path = "teams" element = {<Outlet context={[messageApi]} />}>
-                <Route path = "view-team/:id" element = {<TaskList/>} />
+              {/* teams */}
+              <Route path="teams" element={<Teams />} />
+              <Route path="create-teams" element={<CreateTeams />} />
+              <Route path="update-teams/:id" element={<CreateTeams />} />
+              <Route path="teams" element={<Outlet context={[messageApi]} />}>
+                <Route path="view-team/:id" element={<TaskList />} />
+                <Route path="create-task" element={<CreateTeamsTask />} />
+              </Route>
             </Route>
-          </Route>
-          {/* add redirect for first page */}
-        </Routes>
+            {/* add redirect for first page */}
+          </Routes>
         </UserProvider>
       </BrowserRouter>
     </div>

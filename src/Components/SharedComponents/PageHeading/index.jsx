@@ -72,7 +72,7 @@ function PageHeading({ url }) {
 
   return (
     <div className="w-full flex flex-row items-center justify-between px-5">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+      {/* <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
         {data?.heading}
       </h1>
       {currentModule && (
@@ -82,7 +82,7 @@ function PageHeading({ url }) {
         >
           {data?.button}
         </button>
-      )}
+      )} */}
     </div>
   );
 }

@@ -9,7 +9,7 @@ import { BASE_URL, routes } from "../../../utils/config";
 import dayjs from "dayjs";
 import { useUser } from "../../../context/userContext";
 import * as Yup from "yup";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required."),
@@ -21,6 +21,11 @@ const validationSchema = Yup.object({
 function CreateTask() {
   const { id } = useParams();
   const { user, token } = useUser();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const teamId = queryParams.get("teams_id");
+  console.log(teamId,'fasdlfahsdlfhasldkh')
+
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
@@ -34,6 +39,7 @@ function CreateTask() {
       status: "",
       priority: "",
       due_date: dayjs(new Date()),
+      ...(teamId && { team_id: teamId }),
     },
     validationSchema,
     onSubmit: async (values, { isSubmitting }) => {
@@ -125,6 +131,7 @@ function CreateTask() {
   const handleDateChange = (date) => {
     formik.setFieldValue("due_date", dayjs(date));
   };
+  console.log(formik.values,'asdkfjahsldfahdsl31fa3sf1');
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="flex flex-col space-y-5  ">

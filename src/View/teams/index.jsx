@@ -1,15 +1,15 @@
-import React from 'react'
-import Pagination from '../../Components/SharedComponents/Pagination';
-import { Dropdown } from 'antd';
-import { ThreeDots } from '../../utils/icons';
-import { Link, useOutletContext } from 'react-router';
-import { BASE_URL, routes } from '../../utils/config';
-import { useUser } from '../../context/userContext';
-import axios from 'axios';
+import React from "react";
+import Pagination from "../../Components/SharedComponents/Pagination";
+import { Dropdown } from "antd";
+import { ThreeDots } from "../../utils/icons";
+import { Link, useOutletContext } from "react-router";
+import { BASE_URL, routes } from "../../utils/config";
+import { useUser } from "../../context/userContext";
+import axios from "axios";
 
 function Teams() {
-    const [messageApi] = useOutletContext();
-  const { token,user } = useUser();
+  const [messageApi] = useOutletContext();
+  const { token, user } = useUser();
   const [data, setData] = React.useState([]);
   const [pagination, setPagination] = React.useState({
     page: 1,
@@ -30,7 +30,7 @@ function Teams() {
           },
         }
       );
-      console.log(response,'totalRecords213131')
+      console.log(response, "totalRecords213131");
       if (response?.status === 200) {
         setData(response?.data?.data);
         setPagination((prev) => ({
@@ -87,17 +87,18 @@ function Teams() {
     }
   };
   const generateItems = (obj) => {
-    const arr = ["Edit", "Delete"];
+    const arr = ["Edit", "Delete", "View"];
     return arr.map((element, idx) => {
       const key = (idx + 1).toString();
       const isEdit = element === "Edit";
       return {
         key,
-        label: isEdit ? (
-          <Link to={`${routes.UPDATE_TEAMS}/${obj._id}`}>{element}</Link>
-        ) : (
-          <div onClick={() => handleDelete(obj._id)}>{element}</div>
-        ),
+        label:
+          isEdit || element === "View" ? (
+            <Link to={`${element === "View" ? routes?.VIEW_TEAMS : routes.UPDATE_TEAMS}/${obj._id}`}>{element}</Link>) 
+            : 
+            (<div onClick={() => handleDelete(obj._id)}>{element}</div>
+          ),
       };
     });
   };
@@ -159,7 +160,7 @@ function Teams() {
         handlePaginationClick={handlePaginationClick}
       />
     </div>
-  )
+  );
 }
 
-export default Teams
+export default Teams;

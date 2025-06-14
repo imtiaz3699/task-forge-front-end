@@ -12,7 +12,7 @@ function CustomSelect({
   defaultSelect,
   multiSelect,
 }) {
-   const filteredOptions = options.filter(o => !value.includes(o?.value));
+   const filteredOptions = options?.filter(o => !value?.includes(o?.value));
    
   return (
     <>

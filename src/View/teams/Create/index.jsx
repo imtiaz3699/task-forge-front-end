@@ -135,7 +135,7 @@ function CreateTeams() {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="w-full flex flex-col gap-10 w-full"
+      className="w-full flex flex-col gap-10"
     >
       <div className="flex flex-row items-center justify-between gap-10">
         <CustomInput

@@ -1,18 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { routes, BASE_URL } from "../../../utils/config";
 import axios from "axios";
 import { useUser } from "../../../context/userContext";
 import Pagination from "../../../Components/SharedComponents/Pagination";
-import { Dropdown } from "antd";
+import { Dropdown, Modal } from "antd";
 import { ThreeDots } from "../../../utils/icons";
 import { Link, useOutletContext, useParams } from "react-router";
 import dayjs from "dayjs";
+import TaskFilters from "../../../Components/Teams/TaskFilters";
 function TaskList() {
   const { token } = useUser();
-  const {id} = useParams();
+  const { id } = useParams();
   const teamsId = id;
   const [data, setData] = React.useState([]);
   const [messageApi] = useOutletContext();
+  const [teamsData, setTeamsData] = useState({});
   const [pagination, setPagination] = React.useState({
     page: 1,
     limit: 10,
@@ -21,43 +23,16 @@ function TaskList() {
     total: 0,
     displayPages: 5,
   });
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/teams/get-task-by-team/${id}?page=${pagination.page}&limit=${pagination.limit}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Uncomment if you need to send a token
-          },
-        }
-      );
-      console.log(response,'lasdhflaksjdhfakshfaksj2sf2da1sdf32')
-      if (response?.status === 200) {
-        // setData(response?.data?.task);
-        // setPagination((prev) => ({
-        //   ...prev,
-        //   totalPages: response?.data?.totalPages,
-        //   totalRecords: response?.data?.totalRecords,
-        //   total: response?.data?.total,
-        // }));
-      }
-    } catch (e) {
-      console.error("Error fetching data:", e);
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, [pagination.page, pagination.limit]);
   const handlePaginationClick = (value) => {
     if (value === "next") {
-      if (pagination.totalPages === pagination.page) return;
+      if (pagination?.totalPages?.toString() === pagination?.page?.toString())
+        return;
       setPagination((prev) => ({
         ...pagination,
-        page: pagination.page + 1,
+        page: parseInt(pagination.page) + 1,
       }));
     } else if (value === "prev") {
-      if (pagination.page === 1) return;
+      if (parseInt(pagination.page) === 1) return;
       setPagination((prev) => ({
         ...prev,
         page: pagination.page - 1,
@@ -104,8 +79,37 @@ function TaskList() {
       };
     });
   };
+  useEffect(() => {
+    const getSingleTeam = async () => {
+      if (!teamsId) return;
+      try {
+        const res = await axios.get(
+          `${BASE_URL}/teams/get-single-teams/${teamsId}?page=${pagination?.page}&limit=${pagination?.limit}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res?.status === 200) {
+          setTeamsData(res?.data);
+          setData(res?.data?.tasks);
+          setPagination({
+            page: res?.data?.page,
+            limit: res?.data?.limit,
+            totalPages: res?.data?.totalPages,
+            totalRecords: res?.data?.totalRecords,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching team:", error);
+      }
+    };
+    getSingleTeam();
+  }, [teamsId, token, pagination.page, pagination.limit]);
   return (
     <div className="pb-20 w-full flex flex-col gap-5">
+      <TaskFilters teamsData={teamsData} />
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -139,6 +143,7 @@ function TaskList() {
           <tbody>
             {data?.map((element, idx) => {
               const items = generateItems(element);
+              console.log(element, "alsdfhalsdkjhfasdkjfhlsdkjfskhf");
               return (
                 <tr
                   key={element?._id}
