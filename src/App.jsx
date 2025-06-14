@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import Auth from "./Components/Auth/index";
 import Signup from "./View/Signup/index";
 import AdminLayouts from "./layouts/AdminLayouts";
@@ -14,9 +14,11 @@ import Teams from "./View/teams";
 import CreateTeams from "./View/teams/Create";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import { UserProvider } from "./context/userContext";
+import TaskList from "./View/teams/task";
 function App() {
   const [count, setCount] = useState(0);
-  const [messageApi, contextHolder] = message.useMessage();
+  
+  const [messageApi,contextHolder  ] = message.useMessage();
   return (
     <div className="w-full bg-gray-900 h-screen">
       {contextHolder}
@@ -47,6 +49,9 @@ function App() {
             <Route path="teams" element={<Teams />} />
             <Route path="create-teams" element={<CreateTeams />} />
             <Route path="update-teams/:id" element={<CreateTeams />} />
+            <Route path = "teams" element = {<Outlet context={[messageApi]} />}>
+                <Route path = "view-team/:id" element = {<TaskList/>} />
+            </Route>
           </Route>
           {/* add redirect for first page */}
         </Routes>
