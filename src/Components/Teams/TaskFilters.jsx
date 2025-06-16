@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import CustomInput from "../SharedComponents/CustomInput";
 import FilterInput from "../SharedComponents/FilterInput/FilterInput";
 import FilterSelect from "../SharedComponents/FilterSelect/FilterSelect";
 import { useNavigate } from "react-router";
-import { routes, statusOptions,priorityOptions } from "../../utils/config";
+import { routes, statusOptions, priorityOptions } from "../../utils/config";
 function TaskFilters({ teamsData, filters, setFilters }) {
   const navigate = useNavigate();
   const [options, setOptions] = useState([]);
@@ -40,9 +39,6 @@ function TaskFilters({ teamsData, filters, setFilters }) {
           }))
         : []),
     ];
-    const priorityRes = [
-      {value:"",label:"Select Priority"}
-    ]
     setStatus(statusRes);
     setOptions(res);
   }, [teamsData]);
