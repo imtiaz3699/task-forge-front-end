@@ -17,8 +17,6 @@ import { UserProvider } from "./context/userContext";
 import TaskList from "./View/teams/task";
 import CreateTeamsTask from "./View/teams/task/create";
 function App() {
-  const [count, setCount] = useState(0);
-
   const [messageApi, contextHolder] = message.useMessage();
   return (
     <div className="w-full bg-gray-900 h-screen">
