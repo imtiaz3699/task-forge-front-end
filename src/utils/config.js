@@ -28,6 +28,10 @@ export const statusOptions = [
 ]
 export const priorityOptions = [
     {
+        label: "Select Priority",
+        value: ""
+    },
+    {
         label: "Low",
         value: "low"
     },

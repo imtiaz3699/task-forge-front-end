@@ -109,3 +109,7 @@
   background-color: gray !important;
   
 }
+
+.ant-select-selection-item{
+  background: transparent !important;
+}
