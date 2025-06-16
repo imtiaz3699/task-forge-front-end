@@ -4,10 +4,11 @@ import axios from "axios";
 import { useUser } from "../../../context/userContext";
 import Pagination from "../../../Components/SharedComponents/Pagination";
 import { Dropdown, Modal } from "antd";
-import { ThreeDots } from "../../../utils/icons";
+import { DropDown, ThreeDots } from "../../../utils/icons";
 import { Link, useOutletContext, useParams } from "react-router";
 import dayjs from "dayjs";
 import TaskFilters from "../../../Components/Teams/TaskFilters";
+
 function TaskList() {
   const { token } = useUser();
   const { id } = useParams();
@@ -15,6 +16,13 @@ function TaskList() {
   const [data, setData] = React.useState([]);
   const [messageApi] = useOutletContext();
   const [teamsData, setTeamsData] = useState({});
+  const [users, setUsers] = useState([]);
+  const [filters, setFilters] = useState({
+    title: "",
+    created_by:"",
+    assigned_to:"",
+    status:""
+  });
   const [pagination, setPagination] = React.useState({
     page: 1,
     limit: 10,
@@ -79,12 +87,15 @@ function TaskList() {
       };
     });
   };
+  const handleAssignUser = async () => {};
   useEffect(() => {
     const getSingleTeam = async () => {
       if (!teamsId) return;
       try {
         const res = await axios.get(
-          `${BASE_URL}/teams/get-single-teams/${teamsId}?page=${pagination?.page}&limit=${pagination?.limit}`,
+          `${BASE_URL}/teams/get-single-teams/${teamsId}?page=${
+            pagination?.page
+          }&limit=${pagination?.limit}&title=${filters?.title ?? ""}&assigned_to=${filters?.assigned_to}&status=${filters?.status}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -93,6 +104,18 @@ function TaskList() {
         );
         if (res?.status === 200) {
           setTeamsData(res?.data);
+          const user = res?.data?.team_members?.map((element, idx) => {
+            return {
+              key: element?._id,
+              label: (
+                <div onClick={() => handleAssignUser(element?._id)}>
+                  {" "}
+                  {element?.name}
+                </div>
+              ),
+            };
+          });
+          setUsers(user);
           setData(res?.data?.tasks);
           setPagination({
             page: res?.data?.page,
@@ -106,10 +129,14 @@ function TaskList() {
       }
     };
     getSingleTeam();
-  }, [teamsId, token, pagination.page, pagination.limit]);
+  }, [teamsId, token, pagination.page, pagination.limit, filters.title,filters]);
   return (
     <div className="pb-20 w-full flex flex-col gap-5">
-      <TaskFilters teamsData={teamsData} />
+      <TaskFilters
+        teamsData={teamsData}
+        filters={filters}
+        setFilters={setFilters}
+      />
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -123,7 +150,10 @@ function TaskList() {
               <th scope="col" className="px-6 py-3">
                 Created By
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th
+                scope="col"
+                className="px-6 py-3 flex flex-row items-center gap-2 "
+              >
                 Assigned To
               </th>
               <th scope="col" className="px-6 py-3">
@@ -143,7 +173,6 @@ function TaskList() {
           <tbody>
             {data?.map((element, idx) => {
               const items = generateItems(element);
-              console.log(element, "alsdfhalsdkjhfasdkjfhlsdkjfskhf");
               return (
                 <tr
                   key={element?._id}

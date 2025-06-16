@@ -1,11 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomInput from "../SharedComponents/CustomInput";
 import FilterInput from "../SharedComponents/FilterInput/FilterInput";
+import FilterSelect from "../SharedComponents/FilterSelect/FilterSelect";
 import { useNavigate } from "react-router";
-import { routes } from "../../utils/config";
-function TaskFilters({ teamsData }) {
+import { routes, statusOptions } from "../../utils/config";
+function TaskFilters({ teamsData, filters, setFilters }) {
   const navigate = useNavigate();
-    console.log(teamsData,'fasdlfjasdlfjahsdfka')
+  const [options, setOptions] = useState([]);
+  const [status, setStatus] = useState([]);
+  const handleChange = (e) => {
+    if (e?.target) {
+      setFilters((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      }));
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        assigned_to: e,
+      }));
+    }
+  };
+  useEffect(() => {
+    const res = [
+      { value: "", label: "Select" },
+      ...(Array.isArray(teamsData?.team_members)
+        ? teamsData.team_members.map((element) => ({
+            value: element?._id,
+            label: element?.name,
+          }))
+        : []),
+    ];
+    const statusRes = [
+      { value: "", label: "Select status" },
+      ...(Array.isArray(statusOptions)
+        ? statusOptions.map((element) => ({
+            value: element?.value,
+            label: element?.label,
+          }))
+        : []),
+    ];
+    setStatus(statusRes);
+    setOptions(res);
+  }, [teamsData]);
+  console.log(filters,'fasldfkjhalsdfhalskdfalsd')
   return (
     <div className="w-full flex flex-col items-start gap-5 justify-between">
       <div className="flex flex-row items-center justify-between w-full">
@@ -31,9 +69,30 @@ function TaskFilters({ teamsData }) {
         <div className="flex flex-col gap-2">
           <p className="text-[20px] text-gray-400 ">Filters</p>
           <div className="w-full flex flex-row gap-10">
-            <FilterInput label="Title" />
-            <FilterInput label="Created By" />
-            <FilterInput label="Assigned To" />
+            <FilterInput
+              value={filters?.title}
+              onChange={handleChange}
+              label="Title"
+              name="title"
+            />
+            <FilterSelect
+              label={"Assigned To"}
+              name={"assigned_to"}
+              options={options}
+              handleChange={handleChange}
+            />
+            <FilterSelect
+              label={"Status"}
+              name={"status"}
+              options={status}
+              handleChange={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  status: status?.value,
+                }))
+              }
+            />
+            <FilterInput label="Status" />
           </div>
         </div>
         <button
