@@ -19,9 +19,10 @@ function TaskList() {
   const [users, setUsers] = useState([]);
   const [filters, setFilters] = useState({
     title: "",
-    created_by:"",
-    assigned_to:"",
-    status:""
+    created_by: "",
+    assigned_to: "",
+    status: "",
+    priority: "",
   });
   const [pagination, setPagination] = React.useState({
     page: 1,
@@ -95,7 +96,11 @@ function TaskList() {
         const res = await axios.get(
           `${BASE_URL}/teams/get-single-teams/${teamsId}?page=${
             pagination?.page
-          }&limit=${pagination?.limit}&title=${filters?.title ?? ""}&assigned_to=${filters?.assigned_to}&status=${filters?.status}`,
+          }&limit=${pagination?.limit}&title=${
+            filters?.title ?? ""
+          }&assigned_to=${filters?.assigned_to}&status=${
+            filters?.status
+          }&priority=${filters?.priority}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -129,7 +134,14 @@ function TaskList() {
       }
     };
     getSingleTeam();
-  }, [teamsId, token, pagination.page, pagination.limit, filters.title,filters]);
+  }, [
+    teamsId,
+    token,
+    pagination.page,
+    pagination.limit,
+    filters.title,
+    filters,
+  ]);
   return (
     <div className="pb-20 w-full flex flex-col gap-5">
       <TaskFilters

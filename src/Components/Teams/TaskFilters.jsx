@@ -3,7 +3,7 @@ import CustomInput from "../SharedComponents/CustomInput";
 import FilterInput from "../SharedComponents/FilterInput/FilterInput";
 import FilterSelect from "../SharedComponents/FilterSelect/FilterSelect";
 import { useNavigate } from "react-router";
-import { routes, statusOptions } from "../../utils/config";
+import { routes, statusOptions,priorityOptions } from "../../utils/config";
 function TaskFilters({ teamsData, filters, setFilters }) {
   const navigate = useNavigate();
   const [options, setOptions] = useState([]);
@@ -40,10 +40,24 @@ function TaskFilters({ teamsData, filters, setFilters }) {
           }))
         : []),
     ];
+    const priorityRes = [
+      {value:"",label:"Select Priority"}
+    ]
     setStatus(statusRes);
     setOptions(res);
   }, [teamsData]);
-  console.log(filters,'fasldfkjhalsdfhalskdfalsd')
+  const handleChangeStatus = (e) => {
+    setFilters((prev) => ({
+      ...prev,
+      status: e,
+    }));
+  };
+  const handleChangePriority = (e) => {
+    setFilters((prev) => ({
+      ...prev,
+      priority: e,
+    }));
+  };
   return (
     <div className="w-full flex flex-col items-start gap-5 justify-between">
       <div className="flex flex-row items-center justify-between w-full">
@@ -85,14 +99,14 @@ function TaskFilters({ teamsData, filters, setFilters }) {
               label={"Status"}
               name={"status"}
               options={status}
-              handleChange={() =>
-                setFilters((prev) => ({
-                  ...prev,
-                  status: status?.value,
-                }))
-              }
+              handleChange={handleChangeStatus}
             />
-            <FilterInput label="Status" />
+            <FilterSelect
+              label={"Priority"}
+              name={"priority"}
+              options={priorityOptions}
+              handleChange={handleChangePriority}
+            />
           </div>
         </div>
         <button
