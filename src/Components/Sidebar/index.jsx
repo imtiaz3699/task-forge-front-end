@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { routes } from "../../utils/config";
 import Cookies from "js-cookie";
+import { Invoice } from "../../utils/icons";
 function Sidebar() {
   const navigate = useNavigate();
   const [collapseShow, setCollapseShow] = React.useState(true);
@@ -19,15 +20,21 @@ function Sidebar() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const isUserActive = location.pathname === routes.CREATE_USERS ||
+  const isUserActive =
+    location.pathname === routes.CREATE_USERS ||
     location.pathname === routes.USERS ||
     location.pathname.startsWith(routes.UPDATE_USERS);
-  const isTeamActive = location.pathname === routes.CREATE_TEAMS ||
+  const isTeamActive =
+    location.pathname === routes.CREATE_TEAMS ||
     location.pathname === routes.TEAMS ||
-    location.pathname.startsWith(routes.UPDATE_TEAMS); 
-  const isTaskActive = location.pathname === routes.TASK ||
+    location.pathname.startsWith(routes.UPDATE_TEAMS);
+  const isTaskActive =
+    location.pathname === routes.TASK ||
     location.pathname === routes.CREATE_TASK ||
-    location.pathname.startsWith(routes.UPDATE_TASK);  
+    location.pathname.startsWith(routes.UPDATE_TASK);
+  const isInvoiceMateActive = location.pathname.startsWith(
+    routes.INVOICE_MATE.DASHBOARD
+  );
   return (
     <div className="">
       <button
@@ -63,8 +70,7 @@ function Sidebar() {
               <Link to={routes?.TASK}>
                 <div
                   className={`flex items-center cursor-pointer p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    isTaskActive ? "bg-gray-100 dark:bg-gray-700"
-                      : ""
+                    isTaskActive ? "bg-gray-100 dark:bg-gray-700" : ""
                   } group `}
                 >
                   <svg
@@ -105,8 +111,7 @@ function Sidebar() {
               <Link to={routes?.TEAMS}>
                 <div
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    isTeamActive ? "bg-gray-100 dark:bg-gray-700"
-                      : ""
+                    isTeamActive ? "bg-gray-100 dark:bg-gray-700" : ""
                   }  group`}
                 >
                   <svg
@@ -119,6 +124,20 @@ function Sidebar() {
                     <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap">Teams</span>
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link to={routes?.INVOICE_MATE?.INDEX}>
+                <div
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                    isInvoiceMateActive ? "bg-gray-100 dark:bg-gray-700" : ""
+                  }  group`}
+                >
+                  <Invoice />
+                  <span className="flex-1 ms-3 whitespace-nowrap">
+                    Invoice Mate
+                  </span>
                 </div>
               </Link>
             </li>
