@@ -23,15 +23,16 @@ function InvoiceMateSidebar() {
       icon: <TbTransactionDollar />,
     },
     {
-      name: "Clients",
-      url: routes.INVOICE_MATE.CLIENT_MANAGEMENT,
-      icon: <FaPersonShelter />,
-    },
-    {
       name: "Invoices",
       url: routes.INVOICE_MATE.INVOICE_MANAGEMENT,
       icon: <FaFileInvoiceDollar />,
     },
+    {
+      name: "Clients",
+      url: routes.INVOICE_MATE.CLIENT_MANAGEMENT,
+      icon: <FaPersonShelter />,
+    },
+
     {
       name: "Settings",
       url: routes.INVOICE_MATE.SETTINGS,

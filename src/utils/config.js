@@ -17,6 +17,7 @@ export const routes = {
     INDEX:"/invoice-mate",
     SIGNUP:"/invoice-mate/signup",
     DASHBOARD: "/invoice-mate/dashboard",
+    CREATE_INVOICE:"/invoice-mate/create-invoice",
     CLIENT_MANAGEMENT: "/invoice-mate/client-management",
     TRANSACTION_MANAGEMENT:"/invoice-mate/transactions-management",
     INVOICE_MANAGEMENT: "/invoice-mate/invoice-management",

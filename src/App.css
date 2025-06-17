@@ -113,3 +113,25 @@
 .ant-select-selection-item{
   background: transparent !important;
 }
+
+
+.scroll-thin {
+  overflow: auto;
+  scrollbar-width: thin;       /* Firefox */
+  scrollbar-color: #888 transparent;
+}
+
+/* Chrome, Edge, Safari */
+.scroll-thin::-webkit-scrollbar {
+  width: 0px;
+  height: 1px;
+}
+
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-thin::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}

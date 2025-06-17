@@ -1,6 +1,6 @@
 import React from "react";
 
-function TransactionTables() {
+function InvoiceTable() {
   const data = [
     {
       name: "",
@@ -69,22 +69,19 @@ function TransactionTables() {
         <thead className="text-xs text-[#78778B] uppercase bg-transparent">
           <tr>
             <th scope="col" className="px-6 py-3">
-              NAME/BUSINESS
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Type
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Amount
+              NAME/CLIENT
             </th>
             <th scope="col" className="px-6 py-3">
               Date
             </th>
             <th scope="col" className="px-6 py-3">
-              Invoice Id
+              Orders/Type
             </th>
             <th scope="col" className="px-6 py-3">
-              Weight
+              Amount
+          </th>
+            <th scope="col" className="px-6 py-3">
+              Status
             </th>
             <th scope="col" className="px-6 py-3">
               Action
@@ -105,7 +102,6 @@ function TransactionTables() {
                 <td className="px-6 py-4">Laptop</td>
                 <td className="px-6 py-4">Yes</td>
                 <td className="px-6 py-4">Yes</td>
-                <td className="px-6 py-4">3.0 lb.</td>
                 <td className="flex items-center px-6 py-4">
                   <button className="font-medium text-red-600 bg-[#C8EE44] w-[74px] h-[40px] rounded-[5px] hover:underline ms-3">
                     Remove
@@ -120,4 +116,4 @@ function TransactionTables() {
   );
 }
 
-export default TransactionTables;
+export default InvoiceTable;
