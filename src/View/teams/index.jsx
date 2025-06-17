@@ -6,11 +6,16 @@ import { Link, useOutletContext } from "react-router";
 import { BASE_URL, routes } from "../../utils/config";
 import { useUser } from "../../context/userContext";
 import axios from "axios";
+import TeamsFilters from "../../Components/SharedComponents/TeamsFilters/TeamsFilters";
 
 function Teams() {
   const [messageApi] = useOutletContext();
+
   const { token, user } = useUser();
   const [data, setData] = React.useState([]);
+  const [filters,setFilters] = React.useState({
+    title:"",
+  })
   const [pagination, setPagination] = React.useState({
     page: 1,
     limit: 10,
@@ -22,7 +27,7 @@ function Teams() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/teams/get-teams?page=${pagination.page}&limit=${pagination.limit}`,
+        `${BASE_URL}/teams/get-teams?page=${pagination.page}&limit=${pagination.limit}&title=${filters?.title}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -95,15 +100,22 @@ function Teams() {
         key,
         label:
           isEdit || element === "View" ? (
-            <Link to={`${element === "View" ? routes?.VIEW_TEAMS : routes.UPDATE_TEAMS}/${obj._id}`}>{element}</Link>) 
-            : 
-            (<div onClick={() => handleDelete(obj._id)}>{element}</div>
+            <Link
+              to={`${
+                element === "View" ? routes?.VIEW_TEAMS : routes.UPDATE_TEAMS
+              }/${obj._id}`}
+            >
+              {element}
+            </Link>
+          ) : (
+            <div onClick={() => handleDelete(obj._id)}>{element}</div>
           ),
       };
     });
   };
   return (
     <div className="pb-20 w-full flex flex-col gap-5">
+      <TeamsFilters filters = {filters} setFilters={setFilters} />
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

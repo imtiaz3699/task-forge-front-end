@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { routes, BASE_URL } from "../../utils/config";
 import PageHeading from "../../Components/SharedComponents/PageHeading";
 import axios from "axios";
@@ -9,9 +9,17 @@ import { ThreeDots } from "../../utils/icons";
 import { Link, useOutletContext } from "react-router";
 import dayjs from "dayjs";
 import Permissions from "../../Components/SharedComponents/Permissions/Permissions";
+import TaskFilters from "../../Components/SharedComponents/TaskFilters/TaskFilters";
 function Task() {
   const { token } = useUser();
-
+  const [filters, setFilters] = useState({
+    title: "",
+    created_by: "",
+    assigned_to: "",
+    status: "",
+    priority: "",
+    user_name: "",
+  });
   const [data, setData] = React.useState([]);
   const [messageApi] = useOutletContext();
   const [pagination, setPagination] = React.useState({
@@ -25,7 +33,7 @@ function Task() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/task/get-task?page=${pagination.page}&limit=${pagination.limit}`,
+        `${BASE_URL}/task/get-task?page=${pagination.page}&limit=${pagination.limit}&title=${filters?.title}&user_name=${filters?.user_name}&status=${filters?.status}&priority=${filters?.priority}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -33,7 +41,6 @@ function Task() {
           },
         }
       );
-
       if (response?.status === 200) {
         setData(response?.data?.task);
         setPagination((prev) => ({
@@ -49,7 +56,7 @@ function Task() {
   };
   useEffect(() => {
     fetchData();
-  }, [pagination.page, pagination.limit]);
+  }, [pagination.page, pagination.limit, filters]);
   const handlePaginationClick = (value) => {
     if (value === "next") {
       if (pagination.totalPages === pagination.page) return;
@@ -105,9 +112,11 @@ function Task() {
       };
     });
   };
+  console.log(filters, "fasdflkjasdhfakj");
   return (
     <>
       <div className="pb-20 w-full flex flex-col gap-5">
+        <TaskFilters filters={filters} setFilters={setFilters} />
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col ">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
