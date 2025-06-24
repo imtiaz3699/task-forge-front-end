@@ -1,6 +1,7 @@
 import Dashboard from "../View/dashboard";
 
 export const BASE_URL = import.meta.env.VITE_BASE_URL;
+export const BASE_URL_TWO = import.meta.env.VITE_BASE_URL_INVOICE_MATE;
 export const routes = {
   TASK: "/admin/task",
   CREATE_TASK: "/admin/create",

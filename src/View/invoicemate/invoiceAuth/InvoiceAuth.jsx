@@ -4,11 +4,37 @@ import CustomInput from "../../../Components/SharedComponents/CustomInput";
 import CustomInputTwo from "../../../Components/SharedComponents/CustomInput/CustomInputTwo";
 import { BackArrow } from "../../../utils/icons";
 import { useNavigate } from "react-router";
-import { routes } from "../../../utils/config";
+import { BASE_URL_TWO, routes } from "../../../utils/config";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 function InvoiceAuth() {
   const navigate = useNavigate();
   const { user } = useInvoiceMateUser();
-  console.log(user, "fasdlfjkahsdfkasd");
+  const validation = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address.")
+      .required("Email is required."),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required."),
+  });
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        const response = await axios.post(BASE_URL_TWO + "/")
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
+  console.log(formik.values,'flahdslfkjahsdfkjaformikvalues')
   return (
     <div className=" w-full h-screen bg-[#1C1A2E] flex items-center justify-center ">
       <div className="w-full max-w-[500px] h-full px-5 py-5 flex flex-col gap-5 justify-between">
@@ -33,14 +59,30 @@ function InvoiceAuth() {
               Please enter your credentials
             </p>
           </div>
-          <CustomInputTwo label="Email" />
-          <CustomInputTwo label="Password" type="password" />
-          <p className="text-end text-white hover:underline cursor-pointer">
+          <form onSubmit={formik.onSubmit}>
+            <div className = 'flex flex-col gap-4'>
+            <CustomInputTwo
+              label="Email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              name="email"
+            />
+            <CustomInputTwo
+              label="Password"
+              type="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              password={"password"}
+              name = "password"
+            />
+          </div>
+          <p className="text-end my-5 text-white hover:underline cursor-pointer">
             Forgot Password
           </p>
-          <button className="bg-[#C8EE44] hover:bg-[#c9ee44cb] text-[#1B212D] text-[16px] font-medium rounded-[10px] py-[14px] cursor-pointer  ">
+          <button className="bg-[#C8EE44] w-full hover:bg-[#c9ee44cb] text-[#1B212D] text-[16px] font-medium rounded-[10px] py-[14px] cursor-pointer  ">
             Sign In
           </button>
+          </form>
           <p className="text-center text-gray-400">
             Don’t have an account?{" "}
             <span

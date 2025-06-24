@@ -18,7 +18,7 @@ function CustomInputTwo({ label, value, onChange, type, name }) {
           onClick={() =>
             setChangeType((prev) => (prev === "password" ? "text" : "password"))
           }
-          className="absolute top-12 right-5 hover:text-gray-500 cursor-pointer"
+          className="absolute top-10 right-5 hover:text-gray-500 cursor-pointer"
         >
           <Eye />
         </div>
