@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Eye } from "../../../utils/icons";
 
-function CustomInputTwo({ label, value, onChange, type, name }) {
+function CustomInputTwo({ label, value, onChange, type, name, error }) {
   const [changeType, setChangeType] = useState(type);
   return (
     <div className="flex flex-col gap-1 relative w-full">
@@ -23,6 +23,7 @@ function CustomInputTwo({ label, value, onChange, type, name }) {
           <Eye />
         </div>
       )}
+      {error && <p className="text-red-500 text-[12px]">{error}</p>}
     </div>
   );
 }

@@ -103,7 +103,7 @@ function App() {
                       element={<ExpenseManagement />}
                     />
                     <Route
-                      path="settings"
+                      path="settings/:id"
                       element={<InvoiceSettings />}
                     />
                   </Route>

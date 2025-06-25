@@ -9,8 +9,10 @@ import { TbTransactionDollar } from "react-icons/tb";
 import { IoSettingsSharp } from "react-icons/io5";
 import { IoHelpCircle } from "react-icons/io5";
 import { RiLogoutCircleRFill } from "react-icons/ri";
+import { useInvoiceMateUser } from "../../context/invoiceContext";
 
 function InvoiceMateSidebar() {
+  const { user } = useInvoiceMateUser();
   const data = [
     {
       name: "Dashboard",
@@ -42,6 +44,14 @@ function InvoiceMateSidebar() {
   const location = useLocation();
   const pathName = location.pathname;
   const navigate = useNavigate();
+  const handleRedirect = (element) => {
+    if (element === routes.INVOICE_MATE.SETTINGS) {
+      navigate(`${element}/${user?._id}`);
+    } else {
+      navigate(element);
+    }
+  };
+  console.log(user, "fasdlfjahsdlkj");
   return (
     <div className="w-[250px] h-screen  flex flex-col justify-between gap-5 pl-5 pr-2 py-5 bg-[#1E1C30] shadow-2xl">
       <div className="flex flex-col gap-10">
@@ -51,23 +61,26 @@ function InvoiceMateSidebar() {
         </div>
         <div className="flex flex-col gap-2">
           {data?.map((element, idx) => {
+            const isActive =
+              pathName === element?.url ||
+              (element?.url && pathName.startsWith(element.url));
             return (
               <div
-                onClick={() => navigate(element?.url)}
+                onClick={() => handleRedirect(element?.url)}
                 className={`flex flex-row items-center gap-1 group hover:bg-[#C8EE44]  h-[48px] cursor-pointer ${
-                  pathName === element?.url ? "bg-[#C8EE44] text-[#1B212D]" : ""
+                  isActive ? "bg-[#C8EE44] text-[#1B212D]" : ""
                 }  font-medium rounded-[10px] px-2`}
               >
                 <div
                   className={`group-hover:bg-[#C8EE44] group-hover:text-[#1B212D] ${
-                    pathName === element?.url ? "text-[#1B212D]" : "text-white"
+                    isActive ? "text-[#1B212D]" : "text-white"
                   }`}
                 >
                   {element?.icon}
                 </div>{" "}
                 <p
                   className={`group-hover:text-[#1B212D] ${
-                    pathName === element?.url ? "text-[#1B212D]" : "text-white"
+                    isActive ? "text-[#1B212D]" : "text-white"
                   }`}
                 >
                   {element?.name}

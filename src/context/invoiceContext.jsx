@@ -6,13 +6,13 @@ import { Spin } from "antd";
 export const InvoiceMateUserContext = createContext();
 
 export const InvoiceMateUserProvider = ({ children }) => {
-  const userCookie = Cookies.get("user");
+  const userCookie = Cookies.get("invoice_mate_user");
   const [loading, setLoading] = React.useState(true);
   const [user, setUser] = React.useState(
     userCookie ? JSON.parse(userCookie) : ""
   );
   const [token, setToken] = React.useState(
-    Cookies.get("token") ? Cookies.get("token") : ""
+    Cookies.get("invoice_mate_token") ? Cookies.get("invoice_mate_token") : ""
   );
   const location = useLocation();
   const pathName = location.pathname;

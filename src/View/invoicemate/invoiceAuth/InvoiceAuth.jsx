@@ -3,18 +3,17 @@ import { useInvoiceMateUser } from "../../../context/invoiceContext";
 import CustomInput from "../../../Components/SharedComponents/CustomInput";
 import CustomInputTwo from "../../../Components/SharedComponents/CustomInput/CustomInputTwo";
 import { BackArrow } from "../../../utils/icons";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutlet, useOutletContext } from "react-router";
 import { BASE_URL_TWO, routes } from "../../../utils/config";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import Cookies from "js-cookie";
 function InvoiceAuth() {
   const navigate = useNavigate();
-  const { user } = useInvoiceMateUser();
+  const { token,user,setUser,setToken } = useInvoiceMateUser();
   const validation = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address.")
-      .required("Email is required."),
+    email: Yup.string().required("Email is required."),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("Password is required."),
@@ -23,18 +22,41 @@ function InvoiceAuth() {
     initialValues: {
       email: "",
       password: "",
+      error: "",
     },
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
+    validationSchema: validation,
+    onSubmit: async (values, { setSubmitting, resetForm, setFieldValue }) => {
+      const payload = {
+        email:values?.email,
+        password:values?.password
+      }
       try {
-        const response = await axios.post(BASE_URL_TWO + "/")
+        const response = await axios.post(BASE_URL_TWO + "/auth/login", payload);
+        
+        if (response?.status === 200) {
+          resetForm();
+          Cookies.set(
+            "invoice_mate_user",
+            JSON.stringify(response?.data?.user),
+            {
+              expires: 7,
+            }
+          );
+          Cookies.set("invoice_mate_token", response?.data?.token, {
+            expires: 7,
+          });
+          setUser(response?.data?.user);
+          setToken(response?.data?.token);
+          navigate(routes.INVOICE_MATE?.DASHBOARD);
+        }
       } catch (e) {
-        console.log(e);
+        setFieldValue("error", e?.response?.data?.message);
       } finally {
         setSubmitting(false);
       }
     },
   });
-  console.log(formik.values,'flahdslfkjahsdfkjaformikvalues')
+  console.log(token,user,'fadlsfjk')
   return (
     <div className=" w-full h-screen bg-[#1C1A2E] flex items-center justify-center ">
       <div className="w-full max-w-[500px] h-full px-5 py-5 flex flex-col gap-5 justify-between">
@@ -59,29 +81,41 @@ function InvoiceAuth() {
               Please enter your credentials
             </p>
           </div>
-          <form onSubmit={formik.onSubmit}>
-            <div className = 'flex flex-col gap-4'>
-            <CustomInputTwo
-              label="Email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              name="email"
-            />
-            <CustomInputTwo
-              label="Password"
-              type="password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              password={"password"}
-              name = "password"
-            />
-          </div>
-          <p className="text-end my-5 text-white hover:underline cursor-pointer">
-            Forgot Password
-          </p>
-          <button className="bg-[#C8EE44] w-full hover:bg-[#c9ee44cb] text-[#1B212D] text-[16px] font-medium rounded-[10px] py-[14px] cursor-pointer  ">
-            Sign In
-          </button>
+          <form onSubmit={formik.handleSubmit}>
+            <div className="flex flex-col gap-4">
+              <CustomInputTwo
+                label="Email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                name="email"
+                error={formik.touched.email && formik.errors.email}
+              />
+              <CustomInputTwo
+                label="Password"
+                type="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                password={"password"}
+                name="password"
+                error={formik.touched.email && formik.errors.email}
+              />
+            </div>
+            <p className="text-end my-5 text-white hover:underline cursor-pointer">
+              Forgot Password
+            </p>
+            <div>
+              <button
+                type="submit"
+                className="bg-[#C8EE44] w-full hover:bg-[#c9ee44cb] text-[#1B212D] text-[16px] font-medium rounded-[10px] py-[14px] cursor-pointer  "
+              >
+                Sign In
+              </button>
+              {formik?.values?.error && (
+                <p className="text-red-500 text-[14px] mt-2">
+                  {formik?.values?.error}
+                </p>
+              )}
+            </div>
           </form>
           <p className="text-center text-gray-400">
             Don’t have an account?{" "}
