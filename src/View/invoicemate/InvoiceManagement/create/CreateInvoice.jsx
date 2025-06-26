@@ -16,8 +16,8 @@ function CreateInvoice() {
           <CustomInputTwo label="Invoice Number" />
         </div>
         <div className="flex flex-row items-center gap-[40px] justify-between w-full">
-          <CustomDatePickerTwo label="Date Issue" />
-          <CustomDatePickerTwo label="Due Date" />
+          {/* <CustomDatePickerTwo label="Date Issue" /> */}
+          {/* <CustomDatePickerTwo label="Due Date" /> */}
         </div>
         <div className = 'flex flex-row items-center gap-[40px] justify-between max-w-full  '>
           <CustomSelectTwo label="Product" />

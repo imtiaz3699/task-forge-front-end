@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import CustomInputTwo from "../../../Components/SharedComponents/CustomInput/CustomInputTwo";
 import { useInvoiceMateUser } from "../../../context/invoiceContext";
@@ -6,8 +6,10 @@ import { useFormik } from "formik";
 import { useParams } from "react-router";
 import axios from "axios";
 import { BASE_URL_TWO } from "../../../utils/config";
-
+import CustomDatePickerTwo from "../../../Components/SharedComponents/DatePicker/CustomDatePickerTwo";
+import dayjs from "dayjs";
 function InvoiceSettings() {
+  const [edit, setEdit] = useState(false);
   const { user, token } = useInvoiceMateUser();
   const { id } = useParams();
   const formik = useFormik({
@@ -22,11 +24,11 @@ function InvoiceSettings() {
     },
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       const payload = {
-        name: values?.first_name + values?.last_name,
+        name: values?.first_name + " " + values?.last_name,
         email: values?.email,
-        password: values?.new_password,
+        ...(values?.confirm_password && { password: values?.confirm_password }),
         mobile_number: values?.mobile_number,
-        date_of_birth: values?.date_of_birth,
+        date_of_birth: dayjs(values?.date_of_birth).format("YYYY-MM-DD"),
       };
       try {
         const res = await axios.put(
@@ -38,7 +40,9 @@ function InvoiceSettings() {
             },
           }
         );
-        console.log(res, "falsdfhaskjdfhskd");
+        if (res?.status === 200) {
+          setEdit(false);
+        }
       } catch (e) {
         console.log(e);
       }
@@ -47,19 +51,18 @@ function InvoiceSettings() {
   const getProfile = async () => {
     if (!id) return;
     try {
-      const response = await axios.get(BASE_URL_TWO + `/auth/profile/`, {
+      const response = await axios.get(BASE_URL_TWO + `/auth/profile/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const data = response?.data;
-      console.log(data, formik?.values, "responeData");
       if (response?.status === 200) {
-        formik.setFieldValue("first_name", data?.split(" ")[0]);
-        formik.setFieldValue("last_name", data?.split(" ")[1]);
-        formik.setFieldValue("email", data?.email);
-        formik.setFieldValue("mobile_number", data?.mobile_number);
-        formik.setFieldValue("date_of_birth", data?.date_of_birth);
+        formik.setFieldValue("first_name", data?.name?.split(" ")[0] ?? "");
+        formik.setFieldValue("last_name", data?.name?.split(" ")[1] ?? "");
+        formik.setFieldValue("email", data?.email ?? "");
+        formik.setFieldValue("mobile_number", data?.mobile_number ?? "");
+        formik.setFieldValue("date_of_birth", dayjs(data?.date_of_birth) ?? "");
       }
     } catch (e) {
       console.log(e);
@@ -68,7 +71,11 @@ function InvoiceSettings() {
   useEffect(() => {
     getProfile();
   }, [id]);
-
+  const handleDateChange = (date) => {
+    // console.log(, "fadslfkjfalsdjk");
+    formik.setFieldValue("date_of_birth", dayjs(date));
+  };
+  console.log(formik.values, "fadslfajshdfkasd");
   return (
     <div className="px-[40px] overflow-auto scroll-thin">
       <div className="bg-[#201E34] max-w-[977px] p-[40px] rounded-[10px]">
@@ -82,12 +89,17 @@ function InvoiceSettings() {
           <p className="text-[20px] font-medium text-white">
             Personal Information
           </p>
-          <div className="text-[#29A073] flex flex-row items-center gap-2">
+          <div
+            onClick={() => setEdit(!edit)}
+            className={` ${
+              edit ? "text-white" : " text-[#29A073]"
+            } cursor-pointer flex flex-row items-center gap-2`}
+          >
             <BiEditAlt />
             <span>Edit</span>
           </div>
         </div>
-        <form onClick={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-[20px] mt-[40px] w-full">
             <div className="flex flex-row items-center gap-[40px] w-full">
               <CustomInputTwo
@@ -96,6 +108,7 @@ function InvoiceSettings() {
                 value={formik.values?.first_name}
                 onChange={formik.handleChange}
                 error={formik.touched && formik.errors.first_name}
+                disabled={!edit}
               />
               <CustomInputTwo
                 label="Last Name"
@@ -103,15 +116,15 @@ function InvoiceSettings() {
                 value={formik.values.last_name}
                 onChange={formik.handleChange}
                 error={formik.touched && formik.errors.last_name}
+                disabled={!edit}
               />
             </div>
             <div className="flex flex-row items-center gap-[40px] w-full">
-              <CustomInputTwo
-                label="Date of Birth"
-                name="date_of_birth"
+              <CustomDatePickerTwo
                 value={formik.values.date_of_birth}
-                onChange={formik.handleChange}
-                error={formik.touched && formik.errors.date_of_birth}
+                onChange={handleDateChange}
+                label="Date Of Birth"
+                disabled={!edit}
               />
               <CustomInputTwo
                 label="Mobile Number"
@@ -119,6 +132,7 @@ function InvoiceSettings() {
                 value={formik.values.mobile_number}
                 onChange={formik.handleChange}
                 error={formik.touched && formik.errors.mobile_number}
+                disabled={!edit}
               />
             </div>
             <CustomInputTwo
@@ -127,6 +141,7 @@ function InvoiceSettings() {
               value={formik.values.email}
               onChange={formik.handleChange}
               error={formik.touched && formik.errors.email}
+              disabled={!edit}
             />
             <div className="flex flex-row items-center gap-[40px] w-full">
               <CustomInputTwo
@@ -135,18 +150,21 @@ function InvoiceSettings() {
                 value={formik.values.new_password}
                 onChange={formik.handleChange}
                 error={formik.touched && formik.errors.new_password}
+                disabled={!edit}
               />
-              <CustomInputTwo 
-              label="Confirm Password" 
-              name = 'confirm_password'
-              value = {formik.values.confirm_password}
-              onChange={formik.handleChange}
-              error = {formik.touched && formik.errors.confirm_password}
+              <CustomInputTwo
+                label="Confirm Password"
+                name="confirm_password"
+                value={formik.values.confirm_password}
+                onChange={formik.handleChange}
+                error={formik.touched && formik.errors.confirm_password}
+                disabled={!edit}
               />
             </div>
 
             <button
               type="submit"
+              disabled={!edit}
               className="bg-[#29A073] w-[190px] h-[52px] rounded-[5px] text-white"
             >
               Update

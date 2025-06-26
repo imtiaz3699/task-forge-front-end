@@ -1,6 +1,6 @@
 import React from "react";
 import { routes } from "../../utils/config";
-import { Clients, Home, Invoice, Transaction } from "../../utils/icons";
+import { Clients, Home, Invoice, Product, Transaction } from "../../utils/icons";
 import { useLocation, useNavigate } from "react-router";
 import { MdDashboard } from "react-icons/md";
 import { FaPersonShelter } from "react-icons/fa6";
@@ -34,7 +34,11 @@ function InvoiceMateSidebar() {
       url: routes.INVOICE_MATE.CLIENT_MANAGEMENT,
       icon: <FaPersonShelter />,
     },
-
+    {
+      name:"Products",
+      url:routes.INVOICE_MATE.PRODUCT,
+      icon:<Product/>
+    },
     {
       name: "Settings",
       url: routes.INVOICE_MATE.SETTINGS,

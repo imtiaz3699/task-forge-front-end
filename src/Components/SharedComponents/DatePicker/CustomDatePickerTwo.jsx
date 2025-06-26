@@ -2,7 +2,14 @@ import React from "react";
 import { DatePicker, Space } from "antd";
 import dayjs from "dayjs";
 
-function CustomDatePickerTwo({ label, name, value, onChange, prevDisable }) {
+function CustomDatePickerTwo({
+  label,
+  name,
+  value,
+  onChange,
+  prevDisable,
+  disabled,
+}) {
   const disabledDateTime = () => ({
     disabledHours: () => range(0, 24).splice(4, 20),
     disabledMinutes: () => range(30, 60),
@@ -18,13 +25,16 @@ function CustomDatePickerTwo({ label, name, value, onChange, prevDisable }) {
         {label}
       </label>
       <DatePicker
+        disabled={disabled}
         disabledDate={prevDisable && disabledDate}
         disabledTime={prevDisable && disabledDateTime}
         name={name}
         onChange={onChange}
         value={value}
         style={{ color: "#ffffff" }}
+        rootClassName="!text-white"
         className="!py-3 !bg-transparent !text-white"
+        defaultValue={"fadhf"}
       />
     </div>
   );

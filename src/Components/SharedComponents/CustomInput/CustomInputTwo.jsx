@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Eye } from "../../../utils/icons";
 
-function CustomInputTwo({ label, value, onChange, type, name, error }) {
+function CustomInputTwo({ label, value, onChange, type, name, error,disabled }) {
   const [changeType, setChangeType] = useState(type);
   return (
-    <div className="flex flex-col gap-1 relative w-full">
+    <div className="flex flex-col gap-2 relative w-full">
       <label className="text-gray-100 font-medium text-[15px]">{label}</label>
       <input
         className="border-[#282541] border-[1px] rounded-[10px] h-[48px] text-gray-400 px-2"
@@ -12,6 +12,7 @@ function CustomInputTwo({ label, value, onChange, type, name, error }) {
         onChange={onChange}
         type={changeType}
         name={name}
+        disabled = {disabled}
       />
       {type === "password" && (
         <div

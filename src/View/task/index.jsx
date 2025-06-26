@@ -112,7 +112,6 @@ function Task() {
       };
     });
   };
-  console.log(filters, "fasdflkjasdhfakj");
   return (
     <>
       <div className="pb-20 w-full flex flex-col gap-5">

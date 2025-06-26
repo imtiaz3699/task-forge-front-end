@@ -30,6 +30,7 @@ import Transactions from "./View/invoicemate/transactions/Transactions";
 import ClientManagement from "./View/invoicemate/ClientManagement/ClientManagement";
 import InvoiceSettings from "./View/invoicemate/InvoiceSettings/InvoiceSettings";
 import CreateInvoice from "./View/invoicemate/InvoiceManagement/create/CreateInvoice";
+import InvoiceProduct from "./View/invoicemate/invoiceProduct/InvoiceProduct";
 const InvoiceDashboard = React.lazy(() =>
   import("./View/invoicemate/invoiceDashboard/InvoiceDashboard")
 );
@@ -101,6 +102,10 @@ function App() {
                     <Route
                       path="expense-management"
                       element={<ExpenseManagement />}
+                    />
+                    <Route
+                      path="product"
+                      element={<InvoiceProduct />}
                     />
                     <Route
                       path="settings/:id"
