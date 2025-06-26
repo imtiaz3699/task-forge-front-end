@@ -5,7 +5,7 @@ function CustomInputTwo({ label, value, onChange, type, name, error,disabled }) 
   const [changeType, setChangeType] = useState(type);
   return (
     <div className="flex flex-col gap-2 relative w-full">
-      <label className="text-gray-100 font-medium text-[15px]">{label}</label>
+      <label className="text-gray-100 font-medium text-[15px] text-gray-400">{label}</label>
       <input
         className="border-[#282541] border-[1px] rounded-[10px] h-[48px] text-gray-400 px-2"
         value={value}
