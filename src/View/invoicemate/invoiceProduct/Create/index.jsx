@@ -10,13 +10,16 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { BASE_URL_TWO } from "../../../../utils/config";
 import { useInvoiceMateUser } from "../../../../context/invoiceContext";
+import { Button } from "antd";
+import { CiSquarePlus } from "react-icons/ci";
+import { FaRegPlusSquare } from "react-icons/fa";
 
 const CreateProduct = () => {
   const { token } = useInvoiceMateUser();
   const [categories, setCategories] = useState([]);
   const formik = useFormik({
     initialValues: {
-      title: "string",
+      title: "",
       description: "",
       short_description: "",
       price: "",
@@ -90,6 +93,7 @@ const CreateProduct = () => {
           />
           <CustomInputTwo
             label="Product Price"
+            type="number"
             value={formik.values.price}
             onChange={formik.handleChange}
             name="price"
@@ -134,8 +138,18 @@ const CreateProduct = () => {
             preSelect={"Select Currency"}
           />
           <div className="flex flex-row items-center gap-10 w-full">
-            <RadioButton label="Product Active" />
-            <RadioButton label="Product Featured" />
+            <RadioButton
+              label="Product Active"
+              checked={formik.values.isActive}
+              onChange={formik.handleChange}
+              name="isActive"
+            />
+            <RadioButton
+              label="Product Featured"
+              checked={formik.values.isFeatured}
+              onChange={formik.handleChange}
+              name={"isFeatured"}
+            />
           </div>
         </div>
         <Tags formik={formik} />
@@ -189,17 +203,18 @@ export const DemintionInput = ({ value, onChange }) => {
 export const Tags = ({ formik }) => {
   const [tags, setTags] = useState("");
   const handleAddTag = (event) => {
+    if (tags?.trim() === "") {
+      return;
+    }
     if (formik.values?.tags?.includes(tags)) {
       return;
     }
-    if (event.code === "Space" || event.key === " ") {
-      setTags("");
-
-      formik.setFieldValue("tags", [...formik.values.tags, tags]);
-    }
     if (event.code === "Enter") {
       setTags("");
-      formik.setFieldValue("tags", [...formik.values.tags, tags]);
+      formik.setFieldValue("tags", [...formik.values.tags, tags?.trim()]);
+    } else if (typeof event === "string") {
+      setTags("");
+      formik.setFieldValue("tags", [...formik.values.tags, tags?.trim()]);
     }
   };
   const handleRemoveTag = (tag) => {
@@ -208,12 +223,20 @@ export const Tags = ({ formik }) => {
   };
   return (
     <div className="flex items-center gap-[40px] justify-between w-full">
-      <CustomInputTwo
-        label="Tags"
-        value={tags}
-        onChange={(e) => setTags(e.target.value)}
-        onKeyDown={handleAddTag}
-      />
+      <div className="w-full flex flex-row items-end gap-2">
+        <CustomInputTwo
+          label="Tags"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          onKeyDown={handleAddTag}
+        />
+        <Button
+          onClick={() => handleAddTag(tags)}
+          className="!bg-amber-300 !border-amber-300  hover:!bg-amber-400 hover:!border-amber-400 !h-[45px]"
+        >
+          <FaRegPlusSquare className="!text-black " />
+        </Button>
+      </div>
       <div className="w-full">
         {formik.values?.tags?.map((element, idx) => {
           return (
