@@ -30,7 +30,7 @@ function CustomDatePickerTwo({
         disabledTime={prevDisable && disabledDateTime}
         name={name}
         onChange={onChange}
-        value={value}
+        value={value ?? dayjs(new Date()) }
         style={{ color: "#ffffff" }}
         rootClassName="!text-white"
         className="!py-3 !bg-transparent !text-white"
