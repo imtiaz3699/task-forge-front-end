@@ -11,7 +11,6 @@ import axios from "axios";
 import { BASE_URL_TWO } from "../../../../utils/config";
 import { useInvoiceMateUser } from "../../../../context/invoiceContext";
 import { Button } from "antd";
-import { CiSquarePlus } from "react-icons/ci";
 import { FaRegPlusSquare } from "react-icons/fa";
 
 const CreateProduct = () => {
@@ -40,7 +39,7 @@ const CreateProduct = () => {
   const currency = [
     {
       label: "PKR",
-      label: "pkr",
+      value: "pkr",
     },
   ];
   const handleCurrencyChange = (e) => {
@@ -68,7 +67,6 @@ const CreateProduct = () => {
   useEffect(() => {
     fetchCategories();
   }, []);
-  console.log(formik.values, "afhlkjahsdfkjasdj");
   return (
     <div className="px-[40px] w-full overflow-auto scroll-thin mb-10">
       <div className="flex flex-col ">
@@ -139,12 +137,14 @@ const CreateProduct = () => {
           />
           <div className="flex flex-row items-center gap-10 w-full">
             <RadioButton
+              id = "productActive"
               label="Product Active"
               checked={formik.values.isActive}
               onChange={formik.handleChange}
               name="isActive"
             />
             <RadioButton
+              id = "productFeatured"
               label="Product Featured"
               checked={formik.values.isFeatured}
               onChange={formik.handleChange}
