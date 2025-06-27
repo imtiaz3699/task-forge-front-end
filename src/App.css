@@ -164,3 +164,23 @@
   background-color: #1C1A2E !important;
   color: white !important;
 }
+
+
+.ant-select-selection-item{
+  background-color: white !important;
+  color: black !important;
+}
+.ant-select-selection-search > input{
+  color: white !important;
+}
+.ant-select-selection-search-input{
+  color: white !important;
+}
+.ant-select-selector{
+  min-height: 45px !important;
+  height: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #282541 !important;
+}

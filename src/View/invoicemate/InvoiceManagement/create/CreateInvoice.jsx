@@ -4,6 +4,7 @@ import CustomInputTwo from "../../../../Components/SharedComponents/CustomInput/
 import CustomDatePickerTwo from "../../../../Components/SharedComponents/DatePicker/CustomDatePickerTwo";
 import { RadioButton } from "../../../../Components/SharedComponents/RadioButton/RadioButton";
 import CustomButton from "../../../../Components/SharedComponents/CustomButton/CustomButton";
+import MultiSelect from "../../../../Components/SharedComponents/MultiSelect/MultiSelect";
 
 function CreateInvoice() {
   const status = [
@@ -77,9 +78,10 @@ function CreateInvoice() {
             options={currency}
             preSelect={"Select Currency"}
           />
-          <div className="w-full">
-            <RadioButton label="Tax Included" />
-          </div>
+          <MultiSelect label = "Products"/>
+        </div>
+        <div className="w-full">
+          <RadioButton label="Tax Included" />
         </div>
         <div className="flex items-center justify-end max-w-full gap-5">
           <CustomButton label="Cancel" cancelButton={true} />

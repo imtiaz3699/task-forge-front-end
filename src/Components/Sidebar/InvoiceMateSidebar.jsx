@@ -1,6 +1,5 @@
-import React from "react";
 import { routes } from "../../utils/config";
-import { Category, Clients, Home, Invoice, Product, Transaction } from "../../utils/icons";
+import { Category, Product } from "../../utils/icons";
 import { useLocation, useNavigate } from "react-router";
 import { MdDashboard } from "react-icons/md";
 import { FaPersonShelter } from "react-icons/fa6";
@@ -28,6 +27,7 @@ function InvoiceMateSidebar() {
       name: "Invoices",
       url: routes.INVOICE_MATE.INVOICE_MANAGEMENT,
       icon: <FaFileInvoiceDollar />,
+      children: [routes.INVOICE_MATE.CREATE_INVOICE],
     },
     {
       name: "Clients",
@@ -35,14 +35,15 @@ function InvoiceMateSidebar() {
       icon: <FaPersonShelter />,
     },
     {
-      name:"Products",
-      url:routes.INVOICE_MATE.PRODUCT,
-      icon:<Product/>
+      name: "Products",
+      url: routes.INVOICE_MATE.PRODUCT,
+      icon: <Product />,
+      children: [routes.INVOICE_MATE.CREATE_PRODUCT],
     },
     {
-      name:"Category",
-      url:routes.INVOICE_MATE.CATEGORIES,
-      icon:<Category/>
+      name: "Category",
+      url: routes.INVOICE_MATE.CATEGORIES,
+      icon: <Category />,
     },
     {
       name: "Settings",
@@ -72,6 +73,7 @@ function InvoiceMateSidebar() {
           {data?.map((element, idx) => {
             const isActive =
               pathName === element?.url ||
+              element?.children?.includes(pathName) ||
               (element?.url && pathName.startsWith(element.url));
             return (
               <div
