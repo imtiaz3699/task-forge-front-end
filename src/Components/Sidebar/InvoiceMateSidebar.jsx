@@ -1,6 +1,6 @@
 import React from "react";
 import { routes } from "../../utils/config";
-import { Clients, Home, Invoice, Product, Transaction } from "../../utils/icons";
+import { Category, Clients, Home, Invoice, Product, Transaction } from "../../utils/icons";
 import { useLocation, useNavigate } from "react-router";
 import { MdDashboard } from "react-icons/md";
 import { FaPersonShelter } from "react-icons/fa6";
@@ -38,6 +38,11 @@ function InvoiceMateSidebar() {
       name:"Products",
       url:routes.INVOICE_MATE.PRODUCT,
       icon:<Product/>
+    },
+    {
+      name:"Category",
+      url:routes.INVOICE_MATE.CATEGORIES,
+      icon:<Category/>
     },
     {
       name: "Settings",

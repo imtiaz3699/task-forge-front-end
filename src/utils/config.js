@@ -24,7 +24,8 @@ export const routes = {
     INVOICE_MANAGEMENT: "/invoice-mate/invoice-management",
     EXPENSE_MANAGEMENT: "/invoice-mate/expense-management",
     SETTINGS:"/invoice-mate/settings",
-    PRODUCT:"/invoice-mate/product"
+    PRODUCT:"/invoice-mate/product",
+    CATEGORIES:"/invoice-mate/category"
   },
 };
 export const statusOptions = [

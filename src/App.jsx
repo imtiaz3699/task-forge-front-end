@@ -32,6 +32,7 @@ import InvoiceSettings from "./View/invoicemate/InvoiceSettings/InvoiceSettings"
 import CreateInvoice from "./View/invoicemate/InvoiceManagement/create/CreateInvoice";
 import InvoiceProduct from "./View/invoicemate/invoiceProduct/InvoiceProduct";
 import CreateProduct from "./View/invoicemate/invoiceProduct/Create";
+import Category from "./View/invoicemate/Category";
 const InvoiceDashboard = React.lazy(() =>
   import("./View/invoicemate/invoiceDashboard/InvoiceDashboard")
 );
@@ -111,6 +112,10 @@ function App() {
                     <Route
                       path="create-product"
                       element={<CreateProduct />}
+                    />
+                    <Route
+                      path="category"
+                      element={<Category />}
                     />
                     <Route
                       path="settings/:id"

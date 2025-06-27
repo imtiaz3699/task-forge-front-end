@@ -1,3 +1,4 @@
+
 export const generatePageRange = (currentPage, totalPages, visiblePages = 5) => {
     const currentBlock = Math.floor((currentPage - 1) / visiblePages);
     const start = (currentBlock * visiblePages) + 1;
@@ -8,3 +9,4 @@ export const generatePageRange = (currentPage, totalPages, visiblePages = 5) => 
     }
     return pages;
 };
+

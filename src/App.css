@@ -135,15 +135,32 @@
   background-color: #888;
   border-radius: 4px;
 }
-
-
-
 .no-spinner::-webkit-inner-spin-button,
 .no-spinner::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 .no-spinner {
   -moz-appearance: textfield; /* Firefox */
+}
+
+.ant-upload-list-item-thumbnail{
+  color: white;
+}
+
+.ant-upload > button {
+  color: white;
+}
+.ant-upload-select{
+  display: inline-block !important;
+}
+
+
+.ant-modal-content{
+  background-color: #1C1A2E !important;
+}
+
+.ant-modal-header{
+  background-color: #1C1A2E !important;
+  color: white !important;
 }
