@@ -11,10 +11,10 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-const ImageUpload = ({ label }) => {
+const ImageUpload = ({ label,accept,fileList, setFileList }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [fileList, setFileList] = useState([]);
+  // const [fileList, setFileList] = useState([]);
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -58,6 +58,7 @@ const ImageUpload = ({ label }) => {
       <label className="font-medium text-[15px] text-gray-400">{label}</label>
       <Upload
         listType="picture-card"
+        accept={accept}
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}

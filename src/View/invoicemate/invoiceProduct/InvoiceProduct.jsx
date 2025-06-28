@@ -1,9 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoFilter } from "react-icons/io5";
 import { useNavigate } from "react-router";
-import { routes } from "../../../utils/config";
+import { BASE_URL_TWO, routes } from "../../../utils/config";
+import InvoiceTable from "../../../Components/Tables/InvoiceTable";
+import ProductTables from "../../../Components/Tables/ProductTables";
+import axios from "axios";
+import { useInvoiceMateUser } from "../../../context/invoiceContext";
 function InvoiceProduct() {
   const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const { token } = useInvoiceMateUser();
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL_TWO}/product/get-all-products`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res, "fasdlfkajds");
+      if (res?.status === 200) {
+        setProducts(res?.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <div className="  relative border-b-[#322e5a] border-b-[1px] w-full pb-5 flex items-center justify-between">
@@ -23,7 +47,7 @@ function InvoiceProduct() {
           </button>
         </div>
       </div>
-      {/* <InvoiceTable /> */}
+      <ProductTables data = {products} />
     </div>
   );
 }
