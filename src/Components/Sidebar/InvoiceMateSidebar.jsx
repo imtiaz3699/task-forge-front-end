@@ -33,12 +33,13 @@ function InvoiceMateSidebar() {
       name: "Clients",
       url: routes.INVOICE_MATE.CLIENT_MANAGEMENT,
       icon: <FaPersonShelter />,
+      children:[routes.INVOICE_MATE.CREATE_CLIENT,routes.INVOICE_MATE.UPDATE_CLIENT]
     },
     {
       name: "Products",
       url: routes.INVOICE_MATE.PRODUCT,
       icon: <Product />,
-      children: [routes.INVOICE_MATE.CREATE_PRODUCT],
+      children: [routes.INVOICE_MATE.CREATE_PRODUCT,routes.INVOICE_MATE.UPDATE_PRODUCT],
     },
     {
       name: "Category",

@@ -63,6 +63,7 @@ function InvoiceProduct() {
         valueKey={filters?.product_name}
         handleChangeRange={handleChangeRange}
         filters={filters}
+        product = {true}
       />
       <ProductTables data={products} fetchProducts={fetchProducts} />
     </div>

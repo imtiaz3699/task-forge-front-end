@@ -8,6 +8,7 @@ function InvPageHeader({
   redirect,
   handleChangeRange,
   filters,
+  product,
 }) {
   const navigate = useNavigate();
   console.log(valueKey, "fadslfja");
@@ -36,33 +37,35 @@ function InvPageHeader({
   const [value, setValue] = React.useState([20, 80]);
   return (
     <div className="  relative border-b-[#322e5a] border-b-[1px] w-full pb-5 flex items-center justify-between">
-      <div className = 'flex flex-row items-center gap-4'>
-      <input
-        className="w-[290px] h-[45px] text-[12px] p-2 border border-gray-700 rounded-[10px] text-gray-300"
-        placeholder="Search Product"
-        value={valueKey ?? ""}
-        onChange={handleFilterChange}
-      />
-      <div className="gap-4 flex flex-row items-center">
+      <div className="flex flex-row items-center gap-4">
         <input
-          className="w-[100px] h-[45px] text-[12px] p-2 border border-gray-700 rounded-[10px] text-gray-300"
-          value={filters?.minPrice}
-          onChange={handleChangeRange}
-          name="minPrice"
-          placeholder="Min Price"
-          type = "number"
-          min ={0}
+          className="w-[290px] h-[45px] text-[12px] p-2 border border-gray-700 rounded-[10px] text-gray-300"
+          placeholder="Search Product"
+          value={valueKey ?? ""}
+          onChange={handleFilterChange}
         />
-        <input
-          className="w-[100px] h-[45px] text-[12px] p-2 border border-gray-700 rounded-[10px] text-gray-300"
-          value={filters?.maxPrice}
-          onChange={handleChangeRange}
-          name="maxPrice"
-          placeholder="Max price"
-          type = "number"
-          min ={0}
-        />
-        </div>
+        {product && (
+          <div className="gap-4 flex flex-row items-center">
+            <input
+              className="w-[100px] h-[45px] text-[12px] p-2 border border-gray-700 rounded-[10px] text-gray-300"
+              value={filters?.minPrice}
+              onChange={handleChangeRange}
+              name="minPrice"
+              placeholder="Min Price"
+              type="number"
+              min={0}
+            />
+            <input
+              className="w-[100px] h-[45px] text-[12px] p-2 border border-gray-700 rounded-[10px] text-gray-300"
+              value={filters?.maxPrice}
+              onChange={handleChangeRange}
+              name="maxPrice"
+              placeholder="Max price"
+              type="number"
+              min={0}
+            />
+          </div>
+        )}
       </div>
       <div className="flex items-center gap-[30px] ">
         <button

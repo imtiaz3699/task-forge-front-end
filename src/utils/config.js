@@ -27,7 +27,10 @@ export const routes = {
     PRODUCT:"/invoice-mate/product",
     CREATE_PRODUCT:"/invoice-mate/create-product",
     UPDATE_PRODUCT:"/invoice-mate/update-product",
-    CATEGORIES:"/invoice-mate/category"
+    CATEGORIES:"/invoice-mate/category",
+    CLIENT_MANAGEMENT:"/invoice-mate/client-management",
+    CREATE_CLIENT:"/invoice-mate/create-client",
+    UPDATE_CLIENT:"/invoice-mate/update-client"
   },
 };
 export const statusOptions = [

@@ -12,15 +12,15 @@ function InvoiceNavbar() {
   const navigate = useNavigate();
   const items = [
     {
-      label: user?.name?.toUpperCase(),
+      label: <p className = 'cursor-text'> {user?.name?.toUpperCase()}</p>,
       key: user?.name,
     },
     {
-      label: user?.email,
+      label: <p className = 'cursor-text'> {user?.email}</p>,
       key: user?.email,
     },
     {
-      label: user?.mobile_number,
+      label: <p className = 'cursor-text'>{user?.mobile_number}</p>,
       key: user?.mobile_number,
     },
     {
