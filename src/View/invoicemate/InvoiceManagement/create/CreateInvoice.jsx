@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomSelectTwo from "../../../../Components/SharedComponents/CustomSelect/CustomSelectTwo";
 import CustomInputTwo from "../../../../Components/SharedComponents/CustomInput/CustomInputTwo";
 import CustomDatePickerTwo from "../../../../Components/SharedComponents/DatePicker/CustomDatePickerTwo";
 import { RadioButton } from "../../../../Components/SharedComponents/RadioButton/RadioButton";
 import CustomButton from "../../../../Components/SharedComponents/CustomButton/CustomButton";
 import MultiSelect from "../../../../Components/SharedComponents/MultiSelect/MultiSelect";
+import { useFormik } from "formik";
+import dayjs from "dayjs";
+import { ApiFun } from "../../../../Components/apis/apis";
 
 function CreateInvoice() {
+  const { product, client } = ApiFun();
+  const [products, setProducts] = useState([]);
+  const [clients, setClients] = useState([
+    {
+      label: "",
+      value: "",
+    },
+  ]);
   const status = [
     {
       label: "Paid",
@@ -41,6 +52,67 @@ function CreateInvoice() {
       value: "pkr",
     },
   ];
+  const formik = useFormik({
+    initialValues: {
+      client_id: "",
+      invoice_number: "",
+      date_of_issue: "",
+      due_date: "",
+      status: "",
+      payment_method: "",
+      notes: "",
+      terms: "",
+      currency: "",
+      product_id: [],
+      tax_included: false,
+    },
+  });
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const pro = await product();
+        if (pro) {
+          const proOptions = pro?.map((element, tidx) => {
+            return {
+              label: element?.title,
+              value: element?._id,
+            };
+          });
+          setProducts(proOptions);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    const fetchClients = async () => {
+      try {
+        const cli = await client();
+        if (cli) {
+          const clOptions = cli?.map((element, idx) => {
+            return {
+              label: element?.full_name,
+              value: element?._id,
+            };
+          });
+          setClients(clOptions);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchProducts();
+    fetchClients();
+  }, []);
+  const handleChangeClient = (e) => {
+    formik.setFieldValue("client_id", e.target.value);
+  };
+  const handleDateChange = (date) => {
+    formik.setFieldValue("date_of_issue", dayjs(date));
+  };
+  const handleDueDate = (date) => {
+    formik.setFieldValue("due_date", dayjs(date));
+  };
   return (
     <div className="px-[40px] w-full">
       <div className="flex flex-col ">
@@ -49,18 +121,37 @@ function CreateInvoice() {
       </div>
       <div className="flex flex-col gap-[40px] mt-5">
         <div className="flex flex-row items-center gap-[40px] justify-between w-full">
-          <CustomSelectTwo label="Client" />
+          <CustomSelectTwo
+            label="Client"
+            name="client_id"
+            value={formik.values.client_id}
+            onChange={handleChangeClient}
+            options={clients}
+            preSelect={"Please select client"}
+          />
           <CustomInputTwo label="Invoice Number" />
         </div>
         <div className="flex flex-row items-center gap-[40px] justify-between w-full">
-          <CustomDatePickerTwo label="Date Issue" />
-          <CustomDatePickerTwo label="Due Date" />
+          <CustomDatePickerTwo
+            label="Date Issue"
+            value={formik.values.date_of_issue}
+            onChange={handleDateChange}
+            // disabled={!eidt}
+          />
+          <CustomDatePickerTwo
+            label="Due Date"
+            value={formik.values.due_date}
+            onChange={handleDueDate}
+          />
         </div>
         <div className="flex flex-row items-center gap-[40px] justify-between max-w-full  ">
           <CustomSelectTwo
             label="Status"
             options={status}
             preSelect={"Select Status"}
+            name = "status"
+            value = {formik.values.status}
+            // onChange={}
           />
           <CustomSelectTwo
             label="Payment Method"
@@ -78,7 +169,7 @@ function CreateInvoice() {
             options={currency}
             preSelect={"Select Currency"}
           />
-          <MultiSelect label = "Products"/>
+          <MultiSelect label="Products" />
         </div>
         <div className="w-full">
           <RadioButton label="Tax Included" />

@@ -54,7 +54,6 @@ function InvoiceProduct() {
       }));
     }
   };
-  console.log(filters,'fasdlfsdk')
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <InvPageHeader
