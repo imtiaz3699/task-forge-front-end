@@ -9,6 +9,8 @@ function InvPageHeader({
   handleChangeRange,
   filters,
   product,
+  btnText,
+  placeholder
 }) {
   const navigate = useNavigate();
   console.log(valueKey, "fadslfja");
@@ -40,7 +42,7 @@ function InvPageHeader({
       <div className="flex flex-row items-center gap-4">
         <input
           className="w-[290px] h-[45px] text-[12px] p-2 border border-gray-700 rounded-[10px] text-gray-300"
-          placeholder="Search Product"
+          placeholder={placeholder}
           value={valueKey ?? ""}
           onChange={handleFilterChange}
         />
@@ -72,7 +74,7 @@ function InvPageHeader({
           onClick={() => navigate(redirect)}
           className="bg-[#C8EE44] w-[165px] h-[48px] rounded-[5px] flex items-center justify-center gap-[5px] font-medium cursor-pointer"
         >
-          <img src="/invoie.png" /> Create Product
+          <img src="/invoie.png" /> {btnText}
         </button>
         {/* <button className="w-[110px] h-[48px] rounded-[5px] border-[1px] border-gray-500 text-white flex items-center gap-2 justify-center cursor-pointer">
           <IoFilter /> Filter

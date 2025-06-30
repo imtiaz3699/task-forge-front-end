@@ -63,7 +63,7 @@ function InvoiceMateSidebar() {
     }
   };
   return (
-    <div className="w-[250px] h-screen  flex flex-col justify-between gap-5 pl-5 pr-2 py-5 bg-[#1E1C30] shadow-2xl">
+    <div className="w-[250px] h-screen flex flex-col justify-between gap-5 pl-5 pr-2 py-5 bg-[#1E1C30] shadow-2xl">
       <div className="flex flex-col gap-10">
         <div className="flex flex-row items-center  gap-2">
           <img src="/magloIcon.png" className="" />{" "}

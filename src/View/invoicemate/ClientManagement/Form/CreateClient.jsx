@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CustomInputTwo from "../../../../Components/SharedComponents/CustomInput/CustomInputTwo";
 import { useFormik } from "formik";
 import CustomButton from "../../../../Components/SharedComponents/CustomButton/CustomButton";
@@ -7,8 +7,9 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { BASE_URL_TWO, routes } from "../../../../utils/config";
 import { useInvoiceMateUser } from "../../../../context/invoiceContext";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 function CreateClient() {
+  const { id } = useParams();
   const clientValidationSchema = Yup.object().shape({
     full_name: Yup.string()
       .required("Full name is required")
@@ -39,21 +40,77 @@ function CreateClient() {
     validationSchema: clientValidationSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const res = await axios.post(`${BASE_URL_TWO}/client/create`, values, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (res?.status === 201) {
-          navigate(routes.INVOICE_MATE.CLIENT_MANAGEMENT);
-          toast("Client created successfully.");
-          resetForm();
+        if (id) {
+          const res = await axios.put(
+            `${BASE_URL_TWO}/client/update-client/${id}`,
+            values,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (res?.status === 200) {
+            navigate(routes.INVOICE_MATE.CLIENT_MANAGEMENT);
+            toast("Client created successfully.");
+            resetForm();
+          }
+        } else {
+          const res = await axios.post(
+            `${BASE_URL_TWO}/client/create`,
+            values,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (res?.status === 201) {
+            navigate(routes.INVOICE_MATE.CLIENT_MANAGEMENT);
+            toast("Client created successfully.");
+            resetForm();
+          }
         }
       } catch (e) {
         console.log(e);
       }
     },
   });
+  const fetchSingleClient = async () => {
+    if (!id) return;
+    try {
+      const res = await axios.get(
+        `${BASE_URL_TWO}/client/get-single-client/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res?.status === 200) {
+        const data = res?.data;
+        formik.setValues({
+          full_name: data?.full_name,
+          email: data?.email,
+          phone_number: data?.phone_number,
+          company_name: data?.company_name,
+          address: data?.address,
+          city: data?.city,
+          country: data?.country,
+          postal_code: data?.postal_code,
+          website: data?.website,
+          notes: data?.notes,
+        });
+      }
+      console.log(res, "I am Responsible");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    fetchSingleClient();
+  }, [id]);
+  console.log(id, "fadslfkjahsdlkfj");
   return (
     <div className="px-[40px] w-full overflow-auto scroll-thin mb-10">
       <div className="flex flex-col ">

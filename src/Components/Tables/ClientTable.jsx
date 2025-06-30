@@ -4,9 +4,14 @@ import { ThreeDots } from "../../utils/icons";
 import { useInvoiceMateUser } from "../../context/invoiceContext";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { BASE_URL_TWO } from "../../utils/config";
+import { BASE_URL_TWO, routes } from "../../utils/config";
+import { useNavigate } from "react-router";
 function ClientTable({ data, fetchClient }) {
   const { token } = useInvoiceMateUser();
+  const navigate = useNavigate();
+  const handleEdit = (obj) => {
+    navigate(`${routes.INVOICE_MATE.UPDATE_CLIENT}/${obj?._id}`);
+  };
   const generateItems = (obj) => {
     const arr = ["Edit", "Delete"];
     return arr.map((element, idx) => {
@@ -112,18 +117,32 @@ function ClientTable({ data, fetchClient }) {
                   <Tooltip
                     placement="topLeft"
                     title={
-                      element?.address?.length > 30
+                      element?.country?.length > 15
+                        ? `${element?.country}...`
+                        : element?.country
+                    }
+                  >
+                    {element?.country?.length > 15
+                      ? `${element?.country}...`
+                      : element?.country}
+                  </Tooltip>
+                </td>
+                <td className="px-6 py-4 uppercase">{element?.city}</td>
+                <td className="px-6 py-4 uppercase">
+                  {" "}
+                  <Tooltip
+                    placement="topLeft"
+                    title={
+                      element?.address?.length > 15
                         ? `${element?.address}...`
                         : element?.address
                     }
                   >
-                    {element?.address?.length > 30
+                    {element?.address?.length > 15
                       ? `${element?.address}...`
                       : element?.address}
                   </Tooltip>
                 </td>
-                <td className="px-6 py-4 uppercase">{element?.city}</td>
-                <td className="px-6 py-4 uppercase">{element?.country}</td>
                 <td className="px-6 py-4 uppercase">{element?.postal_code}</td>
                 <td className="px-6 py-4 uppercase">{element?.website}</td>
                 <td className="px-6 py-4 uppercase">{element?.notes}</td>

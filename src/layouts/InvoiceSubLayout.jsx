@@ -7,7 +7,7 @@ function InvoiceSubLayout({ children }) {
   return (
     <div className="flex flex-row items-start ">
       <InvoiceMateSidebar />
-      <div className="flex flex-col bg-[#1C1A2E] h-screen w-full">
+      <div className="flex flex-col bg-[#1C1A2E] h-screen  w-full">
         <InvoiceNavbar />
         {children}
         <Outlet />

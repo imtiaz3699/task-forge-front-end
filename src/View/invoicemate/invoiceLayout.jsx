@@ -5,7 +5,7 @@ import { message } from "antd";
 function InvoiceLayout() {
   const [messageApi, contextHolder] = message.useMessage();
   return (
-    <div className = 'w-full flex flex-col h-[full]'> 
+    <div className = ''> 
       <Outlet context={[messageApi]} />
     </div>
   );

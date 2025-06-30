@@ -64,6 +64,8 @@ function InvoiceProduct() {
         handleChangeRange={handleChangeRange}
         filters={filters}
         product = {true}
+        btnText={"Create Product"}
+        placeholder = "Search product name..."
       />
       <ProductTables data={products} fetchProducts={fetchProducts} />
     </div>

@@ -40,7 +40,7 @@ const InvoiceDashboard = React.lazy(() =>
 function App() {
   const [messageApi, contextHolder] = message.useMessage();
   return (
-    <div className="w-full bg-gray-900 h-screen">
+    <div className="w-full bg-gray-900 overflow-auto">
       {contextHolder}
       <BrowserRouter>
         <Suspense fallback={<div>Loading...</div>}>
@@ -96,6 +96,10 @@ function App() {
                     />
                     <Route
                       path="create-client"
+                      element={<CreateClient />}
+                    />
+                    <Route
+                      path="update-client/:id"
                       element={<CreateClient />}
                     />
                     <Route
