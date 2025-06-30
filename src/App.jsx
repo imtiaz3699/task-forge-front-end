@@ -114,6 +114,10 @@ function App() {
                       element={<CreateProduct />}
                     />
                     <Route
+                      path="update-product/:id"
+                      element={<CreateProduct />}
+                    />
+                    <Route
                       path="category"
                       element={<Category />}
                     />

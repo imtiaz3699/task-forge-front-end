@@ -13,7 +13,9 @@ import { useInvoiceMateUser } from "../../../../context/invoiceContext";
 import { Button, Spin } from "antd";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
+import { useParams } from "react-router";
 const CreateProduct = () => {
+  const { id } = useParams();
   const { token } = useInvoiceMateUser();
   const [categories, setCategories] = useState([]);
   const [productImages, setProductImages] = useState([]);
@@ -136,7 +138,46 @@ const CreateProduct = () => {
   useEffect(() => {
     handleChangeImages();
   }, [thumbnailImages, productImages]);
-  console.log(productImages, thumbnailImages, "fasdlkfj");
+
+  const fetchSingleProduct = async () => {
+    if (!id) return;
+    try {
+      const res = await axios.get(
+        `${BASE_URL_TWO}/product/get-single-product/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = res?.data ?? {};
+      console.log(res, "fasldfhalsdkhflasjk");
+      formik.setValues({
+        title: data?.title,
+        price: data?.price,
+        description: data?.description,
+        short_description: data?.short_description,
+        currency: data?.currency ?? "",
+        dimensions: {
+          width: data?.dimensions?.width,
+          height: data?.dimensions?.height,
+          depth: data?.dimensions?.depth,
+        },
+        category: data?.category,
+        isActive: data?.isActive,
+        isFeatured: data?.isFeatured,
+        tags: data?.tags ?? [],
+        quantity: data?.quantity ?? 0,
+      });
+      setProductImages(data?.images);
+      setThumbnailImages(data?.thumbnail);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchSingleProduct();
+  }, [id]);
   return (
     <div className="px-[40px] w-full overflow-auto scroll-thin mb-10">
       <div className="flex flex-col ">
@@ -228,6 +269,13 @@ const CreateProduct = () => {
               preSelect={"Select Currency"}
             />
             <div className="flex flex-row items-center gap-10 w-full">
+              <CustomInputTwo
+                label="Qauntity"
+                value={formik.values?.quantity}
+                onChange={formik.handleChange}
+                name="quantity"
+                type="number"
+              />
               <RadioButton
                 id="productActive"
                 label="Product Active"
@@ -331,7 +379,7 @@ export const Tags = ({ formik }) => {
           <FaRegPlusSquare className="!text-black " />
         </Button>
       </div>
-      <div className="w-full flex flex-row flex-wrap gap-1" >
+      <div className="w-full flex flex-row flex-wrap gap-1">
         {formik.values?.tags?.map((element, idx) => {
           return (
             <span class="bg-gray-100 inline-flex flex-row items-center gap-3 text-gray-800 text-xs font-medium me-2 px-4 py-2 rounded-sm dark:bg-gray-700 dark:text-gray-300 ">

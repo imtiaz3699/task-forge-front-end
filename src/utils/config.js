@@ -26,6 +26,7 @@ export const routes = {
     SETTINGS:"/invoice-mate/settings",
     PRODUCT:"/invoice-mate/product",
     CREATE_PRODUCT:"/invoice-mate/create-product",
+    UPDATE_PRODUCT:"/invoice-mate/update-product",
     CATEGORIES:"/invoice-mate/category"
   },
 };
