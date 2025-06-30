@@ -3,6 +3,11 @@ import CustomInputTwo from "../../../../Components/SharedComponents/CustomInput/
 import { useFormik } from "formik";
 import CustomButton from "../../../../Components/SharedComponents/CustomButton/CustomButton";
 import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import { BASE_URL_TWO, routes } from "../../../../utils/config";
+import { useInvoiceMateUser } from "../../../../context/invoiceContext";
+import { useNavigate } from "react-router";
 function CreateClient() {
   const clientValidationSchema = Yup.object().shape({
     full_name: Yup.string()
@@ -16,6 +21,8 @@ function CreateClient() {
       .matches(/^\+?[0-9\s\-()]{7,20}$/, "Invalid phone number"),
     company_name: Yup.string().max(100, "Company name is too long").nullable(),
   });
+  const navigate = useNavigate();
+  const { token } = useInvoiceMateUser();
   const formik = useFormik({
     initialValues: {
       full_name: "",
@@ -30,8 +37,23 @@ function CreateClient() {
       notes: "",
     },
     validationSchema: clientValidationSchema,
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const res = await axios.post(`${BASE_URL_TWO}/client/create`, values, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res?.status === 201) {
+          navigate(routes.INVOICE_MATE.CLIENT_MANAGEMENT);
+          toast("Client created successfully.");
+          resetForm();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
   });
-  console.log(formik.values, "fasdlfjhasdkf");
   return (
     <div className="px-[40px] w-full overflow-auto scroll-thin mb-10">
       <div className="flex flex-col ">
@@ -41,7 +63,10 @@ function CreateClient() {
         <p className="text-[18px] text-gray-400">Enter Client Details</p>
       </div>
       <form
-        onSubmit={(e) => {e.preventDefault();formik.handleSubmit}}
+        onSubmit={(e) => {
+          e.preventDefault();
+          formik.handleSubmit();
+        }}
         className="flex flex-col gap-[40px] mt-5"
       >
         <div className="flex flex-row items-start gap-[40px] justify-between w-full">
@@ -119,10 +144,15 @@ function CreateClient() {
           />
         </div>
         <div className="flex items-center justify-end max-w-full gap-5">
-          <CustomButton label="Cancel" cancelButton={true} />
+          <CustomButton
+            label="Cancel"
+            cancelButton={true}
+            onClick={() => navigate(routes.INVOICE_MATE.CLIENT_MANAGEMENT)}
+          />
           <CustomButton label="Submit" type="submit" />
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 }

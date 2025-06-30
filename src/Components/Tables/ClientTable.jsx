@@ -1,8 +1,59 @@
-import { Image } from "antd";
+import { Dropdown, Image, Popconfirm, Tooltip } from "antd";
 import React from "react";
-
-function ClientTable() {
-    const data = [{}];
+import { ThreeDots } from "../../utils/icons";
+import { useInvoiceMateUser } from "../../context/invoiceContext";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import { BASE_URL_TWO } from "../../utils/config";
+function ClientTable({ data, fetchClient }) {
+  const { token } = useInvoiceMateUser();
+  const generateItems = (obj) => {
+    const arr = ["Edit", "Delete"];
+    return arr.map((element, idx) => {
+      const key = (idx + 1).toString();
+      const isEdit = element === "Edit";
+      return {
+        key,
+        label: isEdit ? (
+          <div onClick={() => handleEdit(obj)}>{element}</div>
+        ) : (
+          <Popconfirm
+            title="Delete the category"
+            description="Are you sure to delete this category?"
+            onConfirm={() => handleDelete(obj?._id)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <div>{element}</div>
+          </Popconfirm>
+        ),
+      };
+    });
+  };
+  const handleDelete = async (id) => {
+    try {
+      const res = await axios.delete(
+        `${BASE_URL_TWO}/client/delete-client/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res?.status === 200) {
+        toast("Product Deleted!");
+      }
+      fetchClient();
+    } catch (e) {
+      toast(e?.message ?? e?.response?.data?.message, {
+        role: "error",
+      });
+    }
+  };
+  const cancel = (e) => {
+    console.log(e);
+  };
   return (
     <div className="relative overflow-y-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -45,64 +96,40 @@ function ClientTable() {
         </thead>
         <tbody>
           {data?.map((element, idx) => {
-            // const items = generateItems(element, ["Edit", "Delete"]);
+            const items = generateItems(element, ["Edit", "Delete"]);
             return (
               <tr className=" border-b  dark:border-gray-700 border-gray-200 bg-gransparent dark:hover:bg-gray-600">
                 <th
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  
-                  Full Name
+                  {element?.full_name}
                 </th>
-                <td className="px-6 py-4">Email</td>
+                <td className="px-6 py-4">{element?.email}</td>
+                <td className="px-6 py-4">{element?.phone_number}</td>
+                <td className="px-6 py-4">{element?.company_name}</td>
                 <td className="px-6 py-4">
-                  {/* <Tooltip
+                  <Tooltip
                     placement="topLeft"
                     title={
-                      element?.description?.length > 30
-                        ? `${element?.description}...`
-                        : element?.description
+                      element?.address?.length > 30
+                        ? `${element?.address}...`
+                        : element?.address
                     }
                   >
-                    {element?.description?.length > 30
-                      ? `${element?.description}...`
-                      : element?.description}
-                  </Tooltip> */}
-                        Phone Number
+                    {element?.address?.length > 30
+                      ? `${element?.address}...`
+                      : element?.address}
+                  </Tooltip>
                 </td>
-                <td className="px-6 py-4">
-                  {/* <Tooltip
-                    placement="topLeft"
-                    title={
-                      element?.short_description?.length > 30
-                        ? `${element?.short_description}...`
-                        : element?.short_description
-                    }
-                  >
-                    {element?.short_description?.length > 30
-                      ? `${element?.short_description}...`
-                      : element?.short_description}
-                  </Tooltip> */}
-                  Company Name
-                </td>
-                <td className="px-6 py-4">Address</td>
-                <td className="px-6 py-4 uppercase">City</td>
-                <td className="px-6 py-4 uppercase">
-                  Country
-                </td>
-                <td className="px-6 py-4 uppercase">
-                  Postal Code
-                </td>
-                <td className="px-6 py-4 uppercase">
-                  Website
-                </td>
-                <td className="px-6 py-4 uppercase">
-                  Notes
-                </td>
-                
+                <td className="px-6 py-4 uppercase">{element?.city}</td>
+                <td className="px-6 py-4 uppercase">{element?.country}</td>
+                <td className="px-6 py-4 uppercase">{element?.postal_code}</td>
+                <td className="px-6 py-4 uppercase">{element?.website}</td>
+                <td className="px-6 py-4 uppercase">{element?.notes}</td>
+
                 <td className="flex items-center px-6 py-4">
-                  {/* <Dropdown
+                  <Dropdown
                     maxHeight={20}
                     trigger={"click"}
                     menu={{ items }}
@@ -111,14 +138,14 @@ function ClientTable() {
                     <button>
                       <ThreeDots />
                     </button>
-                  </Dropdown> */}
-                  Actions
+                  </Dropdown>
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+      <ToastContainer />
     </div>
   );
 }

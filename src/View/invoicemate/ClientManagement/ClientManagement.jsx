@@ -1,13 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InvPageHeader from "../../../Components/InvoiceMate/InvPageHeader/InvPageHeader";
-import { routes } from "../../../utils/config";
+import { BASE_URL_TWO, routes } from "../../../utils/config";
 import ClientTable from "../../../Components/Tables/ClientTable";
+import axios from "axios";
+import { useInvoiceMateUser } from "../../../context/invoiceContext";
 
 function ClientManagement() {
+  const [filters, setFilters] = useState({});
+  const [data, setData] = useState([]);
+  const { token } = useInvoiceMateUser();
+  const fetchClients = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL_TWO}/client/get-all-clients`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res?.status === 200) {
+        setData(res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchClients();
+  }, []);
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <InvPageHeader redirect={routes.INVOICE_MATE.CREATE_CLIENT} />
-      <ClientTable />
+      <ClientTable data = {data} fetchClient={fetchClients} />
     </div>
   );
 }
