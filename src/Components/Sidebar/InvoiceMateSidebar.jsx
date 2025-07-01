@@ -124,7 +124,7 @@ function InvoiceMateSidebar() {
           </p>
         </div>
         <div
-          onClick={() => navigate("element?.url")}
+          onClick={() => navigate(routes.INVOICE_MATE.INDEX)}
           className={`flex flex-row items-center gap-1 group hover:bg-[#C8EE44]  h-[48px] cursor-pointer ${
             pathName === "element?.url" ? "bg-[#C8EE44] text-[#1B212D]" : ""
           }  font-medium rounded-[10px] px-2`}

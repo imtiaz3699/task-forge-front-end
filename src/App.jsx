@@ -111,6 +111,10 @@ function App() {
                       element={<CreateInvoice />}
                     />
                     <Route
+                      path="invoice-update/:id"
+                      element={<CreateInvoice />}
+                    />
+                    <Route
                       path="expense-management"
                       element={<ExpenseManagement />}
                     />

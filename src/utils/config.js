@@ -19,6 +19,7 @@ export const routes = {
     SIGNUP:"/invoice-mate/signup",
     DASHBOARD: "/invoice-mate/dashboard",
     CREATE_INVOICE:"/invoice-mate/create-invoice",
+    UPDATE_INVOICE:"/invoice-mate/invoice-update",
     CLIENT_MANAGEMENT: "/invoice-mate/client-management",
     TRANSACTION_MANAGEMENT:"/invoice-mate/transactions-management",
     INVOICE_MANAGEMENT: "/invoice-mate/invoice-management",

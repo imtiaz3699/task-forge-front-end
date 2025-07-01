@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoFilter } from "react-icons/io5";
 import InvoiceTable from "../../../Components/Tables/InvoiceTable";
 import { useNavigate } from "react-router";
-import { routes } from "../../../utils/config";
+import { BASE_URL_TWO, routes } from "../../../utils/config";
+import { useInvoiceMateUser } from "../../../context/invoiceContext";
+import axios from "axios";
 
 function InvoiceManagement() {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const { token } = useInvoiceMateUser();
+  const fetchInvoices = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL_TWO}/invoice/get-all-invoices`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = res?.data;
+      if (res?.status === 200) {
+        setData(data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    fetchInvoices();
+  }, []);
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <div className="  relative border-b-[#322e5a] border-b-[1px] w-full pb-5 flex items-center justify-between">
@@ -25,7 +47,8 @@ function InvoiceManagement() {
           </button>
         </div>
       </div>
-      <InvoiceTable />
+
+      <InvoiceTable data = {data} fetchInvoices={fetchInvoices} />
     </div>
   );
 }
