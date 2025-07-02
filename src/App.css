@@ -184,3 +184,27 @@
   justify-content: center;
   border: 1px solid #282541 !important;
 }
+
+.ant-pagination-item{
+  background: transparent !important;
+  color: white !important;
+  border: 1px solid gray !important;
+}
+.ant-pagination-item > a {
+  color: white !important;
+}
+.ant-pagination-item-active {
+  border: 1px solid #C8EE44 !important;
+}
+.ant-pagination-item-active > a {
+  color:  #C8EE44 !important;
+}
+.ant-pagination-next{
+  color: white !important;
+}
+.anticon-right{
+  color: white !important;
+}
+.anticon-left{
+  color: white !important;
+}

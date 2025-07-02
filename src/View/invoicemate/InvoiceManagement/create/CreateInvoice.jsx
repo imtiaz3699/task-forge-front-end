@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomSelectTwo from "../../../../Components/SharedComponents/CustomSelect/CustomSelectTwo";
 import CustomInputTwo from "../../../../Components/SharedComponents/CustomInput/CustomInputTwo";
 import CustomDatePickerTwo from "../../../../Components/SharedComponents/DatePicker/CustomDatePickerTwo";
@@ -16,16 +16,11 @@ import { ToastContainer, toast } from "react-toastify";
 function CreateInvoice() {
   const { product, client } = ApiFun();
   const { id } = useParams();
-  console.log(id, "fasdlfhasldkfh");
   const { token } = useInvoiceMateUser();
   const [products, setProducts] = useState([]);
+  
   const navigate = useNavigate();
-  const [clients, setClients] = useState([
-    {
-      label: "",
-      value: "",
-    },
-  ]);
+  const [clients, setClients] = useState([]);
   const status = [
     {
       label: "Paid",
@@ -88,19 +83,32 @@ function CreateInvoice() {
         product_id: values?.product_id,
         tax_included: values?.tax_included,
       };
+
       try {
-        const res = await axios.post(
-          `${BASE_URL_TWO}/invoice/create`,
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        if (id) {
+          const res = await axios.put(
+            `${BASE_URL_TWO}/invoice/update/${id}`,
+            payload,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        } else {
+          const res = await axios.post(
+            `${BASE_URL_TWO}/invoice/create`,
+            payload,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (res?.status === 201) {
+            toast("Invocie has been created successfully!");
+            navigate(routes.INVOICE_MATE.INVOICE_MANAGEMENT);
           }
-        );
-        if (res?.status === 201) {
-          toast("Invocie has been created successfully!");
-          navigate(routes.INVOICE_MATE.INVOICE_MANAGEMENT);
         }
       } catch (e) {
         console.log(e);
@@ -108,26 +116,26 @@ function CreateInvoice() {
     },
   });
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const cli = await client();
-        if (cli) {
-          const clOptions = cli?.map((element, idx) => {
-            return {
-              label: element?.full_name,
-              value: element?._id,
-            };
-          });
-          setClients(clOptions);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchClients = async () => {
+  //     try {
+  //       const cli = await client();
+  //       if (cli) {
+  //         const clOptions = cli?.map((element, idx) => {
+  //           return {
+  //             label: element?.full_name,
+  //             value: element?._id,
+  //           };
+  //         });
+  //         setClients(clOptions);
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
 
-    fetchClients();
-  }, []);
+  //   fetchClients();
+  // }, []);
   const handleChangeClient = (e) => {
     formik.setFieldValue("client_id", e.target.value);
   };
@@ -173,6 +181,9 @@ function CreateInvoice() {
   const handleSelectProduct = (e) => {
     formik.setFieldValue("product_id", e);
   };
+  const handleSelectClient = (e) => {
+    formik.setFieldValue("client_id", e);
+  };
 
   const getSingleInvoie = async () => {
     try {
@@ -211,10 +222,34 @@ function CreateInvoice() {
       console.log(e);
     }
   };
-
+  const handleSearchClient = async (e) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL_TWO}/client/get-all-clients?name=${e}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = res?.data?.data;
+      if (res?.status === 200) {
+        const cli = data?.map((element, idx) => {
+          return {
+            label: element?.full_name,
+            value: element?._id,
+          };
+        });
+        setClients(cli)
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     getSingleInvoie();
   }, [id]);
+  console.log(clients,'fasdlfajshdlfkashdl')
   return (
     <div className="px-[40px] w-full">
       <div className="flex flex-col ">
@@ -231,6 +266,12 @@ function CreateInvoice() {
               onChange={handleChangeClient}
               options={clients}
               preSelect={"Please select client"}
+            />
+            <MultiSelect
+              onSearch={handleSearchClient}
+              label="Client"
+              options={clients}
+              onChange={handleSelectClient}
             />
           </div>
           <div className="flex flex-row items-center gap-[40px] justify-between w-full">
@@ -281,7 +322,7 @@ function CreateInvoice() {
           <div className="flex flex-row items-center gap-[40px] justify-between max-w-full  ">
             <CustomSelectTwo
               label="Currency"
-              value = {formik.values.currency}
+              value={formik.values.currency}
               options={currency}
               preSelect={"Select Currency"}
               onChange={handleChange}

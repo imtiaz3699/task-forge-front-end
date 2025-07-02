@@ -5,21 +5,37 @@ import { useNavigate } from "react-router";
 import { BASE_URL_TWO, routes } from "../../../utils/config";
 import { useInvoiceMateUser } from "../../../context/invoiceContext";
 import axios from "axios";
+import { Pagination } from "antd";
 
 function InvoiceManagement() {
   const navigate = useNavigate();
+  const [pagination, setPagination] = useState({
+    limit: 10,
+    offset: 1,
+    currentPage: 1,
+    totalPages: 1,
+    totalResults: 0,
+  });
   const [data, setData] = useState([]);
   const { token } = useInvoiceMateUser();
   const fetchInvoices = async () => {
     try {
-      const res = await axios.get(`${BASE_URL_TWO}/invoice/get-all-invoices`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `${BASE_URL_TWO}/invoice/get-all-invoices?offset=${pagination?.currentPage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = res?.data;
       if (res?.status === 200) {
-        setData(data);
+        setData(data?.data);
+        setPagination({
+          totalPages: data?.totalPages,
+          totalResults: data?.totalResults,
+          currentPage: data?.currentPage,
+        });
       }
     } catch (e) {
       console.log(e);
@@ -27,7 +43,13 @@ function InvoiceManagement() {
   };
   useEffect(() => {
     fetchInvoices();
-  }, []);
+  }, [pagination?.currentPage]);
+  const handleChangePage = (value) => {
+    setPagination((prev) => ({
+      ...prev,
+      currentPage: value,
+    }));
+  };
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <div className="  relative border-b-[#322e5a] border-b-[1px] w-full pb-5 flex items-center justify-between">
@@ -48,7 +70,14 @@ function InvoiceManagement() {
         </div>
       </div>
 
-      <InvoiceTable data = {data} fetchInvoices={fetchInvoices} />
+      <InvoiceTable data={data} fetchInvoices={fetchInvoices} />
+      <div className="flex items-center justify-end">
+        <Pagination
+          defaultCurrent={pagination?.currentPage}
+          total={pagination?.totalResults}
+          onChange={handleChangePage}
+        />
+      </div>
     </div>
   );
 }
