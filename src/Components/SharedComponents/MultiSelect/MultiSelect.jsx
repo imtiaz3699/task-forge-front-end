@@ -1,9 +1,7 @@
 import { Select, Space, Spin } from "antd";
 
 function MultiSelect({ label, onSearch, options, onChange, showSearh = false, value }) {
-  const handleChange = (value) => {
-    console.log(`selectedValue ${value}`);
-  };
+  
   return (
     <>
       {
@@ -11,7 +9,6 @@ function MultiSelect({ label, onSearch, options, onChange, showSearh = false, va
           showSearch
           value={value}
           placeholder="Search and select a client"
-          // notFoundContent={fetching ? <Spin size="small" /> : null}
           filterOption={false}
           onSearch={onSearch}
           onChange={onChange}

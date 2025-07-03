@@ -6,10 +6,18 @@ import ProductTables from "../../../Components/Tables/ProductTables";
 import axios from "axios";
 import { useInvoiceMateUser } from "../../../context/invoiceContext";
 import InvPageHeader from "../../../Components/InvoiceMate/InvPageHeader/InvPageHeader";
+import { Pagination } from "antd";
 function InvoiceProduct() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const { token } = useInvoiceMateUser();
+  const [pagination, setPagination] = useState({
+    limit: 10,
+    offset: 1,
+    currentPage: 1,
+    totalPages: 1,
+    totalResults: 0,
+  });
   const [filters, setFilters] = useState({
     product_name: "",
     minPrice: "",
@@ -25,8 +33,14 @@ function InvoiceProduct() {
           },
         }
       );
+      const data = res?.data
       if (res?.status === 200) {
         setProducts(res?.data);
+        setPagination({
+          totalPages: data?.totalPages,
+          totalResults: data?.totalResults,
+          currentPage: data?.currentPage,
+        });
       }
     } catch (e) {
       console.log(e);
@@ -54,6 +68,12 @@ function InvoiceProduct() {
       }));
     }
   };
+  const handleChangePage = (value) => {
+    setPagination((prev) => ({
+      ...prev,
+      currentPage: value,
+    }));
+  };
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <InvPageHeader
@@ -62,11 +82,18 @@ function InvoiceProduct() {
         valueKey={filters?.product_name}
         handleChangeRange={handleChangeRange}
         filters={filters}
-        product = {true}
+        product={true}
         btnText={"Create Product"}
-        placeholder = "Search product name..."
+        placeholder="Search product name..."
       />
       <ProductTables data={products} fetchProducts={fetchProducts} />
+      <div className = 'flex items-center justify-end'>
+      <Pagination
+        defaultCurrent={pagination?.currentPage}
+        total={pagination?.totalResults}
+        onChange={handleChangePage}
+      />
+      </div>
     </div>
   );
 }
