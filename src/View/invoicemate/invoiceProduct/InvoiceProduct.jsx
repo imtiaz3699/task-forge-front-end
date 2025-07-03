@@ -39,7 +39,7 @@ function InvoiceProduct() {
           totalPages: res?.data?.totalPages,
           totalResults: res?.data?.totalRecords,
           currentPage: res?.data?.currentPage,
-          limit:res?.data?.limit ?? 10
+          limit: res?.data?.limit ?? 10,
         });
       }
     } catch (e) {

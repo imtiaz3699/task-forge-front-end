@@ -6,6 +6,7 @@ import { BASE_URL_TWO, routes } from "../../../utils/config";
 import { useInvoiceMateUser } from "../../../context/invoiceContext";
 import axios from "axios";
 import { Pagination } from "antd";
+import InvPageHeader from "../../../Components/InvoiceMate/InvPageHeader/InvPageHeader";
 
 function InvoiceManagement() {
   const navigate = useNavigate();
@@ -16,12 +17,15 @@ function InvoiceManagement() {
     totalPages: 1,
     totalResults: 0,
   });
+  const [filters, setFilters] = useState({
+    invoice_no: "",
+  });
   const [data, setData] = useState([]);
   const { token } = useInvoiceMateUser();
   const fetchInvoices = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL_TWO}/invoice/get-all-invoices?offset=${pagination?.currentPage}`,
+        `${BASE_URL_TWO}/invoice/get-all-invoices?offset=${pagination?.currentPage}&invoice_number=${filters?.invoice_no}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -43,16 +47,23 @@ function InvoiceManagement() {
   };
   useEffect(() => {
     fetchInvoices();
-  }, [pagination?.currentPage]);
+  }, [pagination?.currentPage, filters]);
   const handleChangePage = (value) => {
     setPagination((prev) => ({
       ...prev,
       currentPage: value,
     }));
   };
+  const handleFilterChange = async (e) => {
+    setFilters((prev) => ({
+      ...prev,
+      invoice_no: e.target.value,
+    }));
+  };
+  console.log(filters?.invoice_no, "InvoiceNumber");
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
-      <div className="  relative border-b-[#322e5a] border-b-[1px] w-full pb-5 flex items-center justify-between">
+      {/* <div className="  relative border-b-[#322e5a] border-b-[1px] w-full pb-5 flex items-center justify-between">
         <input
           className="w-[290px] h-[45px] text-[12px] p-2 border border-gray-700 rounded-[10px] text-gray-300"
           placeholder="Search Transactions"
@@ -68,7 +79,14 @@ function InvoiceManagement() {
             <IoFilter /> Filter
           </button>
         </div>
-      </div>
+      </div> */}
+      <InvPageHeader
+        redirect={routes.INVOICE_MATE.CREATE_INVOICE}
+        btnText="Create Invoice"
+        placeholder="Search invoice nummber..."
+        valueKey={filters?.invoice_no}
+        handleFilterChange={handleFilterChange}
+      />
 
       <InvoiceTable data={data} fetchInvoices={fetchInvoices} />
       <div className="flex items-center justify-end">
