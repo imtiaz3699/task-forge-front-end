@@ -18,7 +18,8 @@ function CreateInvoice() {
   const { id } = useParams();
   const { token } = useInvoiceMateUser();
   const [products, setProducts] = useState([]);
-  
+  const [searchedClient, setSearchedClients] = ('');
+
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const status = [
@@ -116,29 +117,9 @@ function CreateInvoice() {
     },
   });
 
-  // useEffect(() => {
-  //   const fetchClients = async () => {
-  //     try {
-  //       const cli = await client();
-  //       if (cli) {
-  //         const clOptions = cli?.map((element, idx) => {
-  //           return {
-  //             label: element?.full_name,
-  //             value: element?._id,
-  //           };
-  //         });
-  //         setClients(clOptions);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-
-  //   fetchClients();
-  // }, []);
-  const handleChangeClient = (e) => {
-    formik.setFieldValue("client_id", e.target.value);
-  };
+  // const handleChangeClient = (e) => {
+  //   formik.setFieldValue("client_id", e.target.value);
+  // };
   const handleDateChange = (date) => {
     formik.setFieldValue("date_of_issue", dayjs(date));
   };
@@ -186,6 +167,7 @@ function CreateInvoice() {
   };
 
   const getSingleInvoie = async () => {
+    if (!id) return;
     try {
       const res = await axios.get(
         `${BASE_URL_TWO}/invoice/get-single-invoice/${id}`,
@@ -249,7 +231,11 @@ function CreateInvoice() {
   useEffect(() => {
     getSingleInvoie();
   }, [id]);
-  console.log(clients,'fasdlfajshdlfkashdl')
+   const handleChangeClient = (selectedId) => {
+    const selectedClient = clients?.find((c) => c?.value === selectedId);
+    formik.setFieldValue('client_id',selectedClient?.value)
+  };
+  console.log(formik.values, 'fasdlfajshdlfkashdl')
   return (
     <div className="px-[40px] w-full">
       <div className="flex flex-col ">
@@ -259,19 +245,21 @@ function CreateInvoice() {
       <form onSubmit={formik.handleSubmit}>
         <div className="flex flex-col gap-[40px] mt-5">
           <div className="flex flex-row items-center gap-[40px] justify-between w-full">
-            <CustomSelectTwo
+            {/* <CustomSelectTwo
               label="Client"
               name="client_id"
               value={formik.values.client_id}
               onChange={handleChangeClient}
               options={clients}
               preSelect={"Please select client"}
-            />
+            /> */}
             <MultiSelect
+              value = {searchedClient}
+              showSearh={true}
               onSearch={handleSearchClient}
               label="Client"
               options={clients}
-              onChange={handleSelectClient}
+              onChange={handleChangeClient}
             />
           </div>
           <div className="flex flex-row items-center gap-[40px] justify-between w-full">
@@ -279,7 +267,7 @@ function CreateInvoice() {
               label="Date Issue"
               value={formik.values.date_of_issue}
               onChange={handleDateChange}
-              // disabled={!eidt}
+            // disabled={!eidt}
             />
             <CustomDatePickerTwo
               label="Due Date"

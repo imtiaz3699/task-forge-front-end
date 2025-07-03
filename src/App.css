@@ -99,14 +99,18 @@
 .ant-select-selection-wrap{
   background: transparent !important;
 }
-
+.ant-select-selection-wrap > span{
+  background: transparent !important;
+  color: white !important;
+}
 .ant-select-selector{
   background-color: transparent !important;
   color: white !important;
   height: 40px !important;
 }
 .ant-select-selection-item{
-  background-color: gray !important;
+  /* background-color: gray !important; */
+  background: transparent !important;
   
 }
 
@@ -206,5 +210,15 @@
   color: white !important;
 }
 .anticon-left{
+  color: white !important;
+}
+
+.ant-select-selection-search{
+  background: transparent !important;
+  background-color: red !important;
+}
+.ant-select-selection-search-input{
+  background: transparent !important;
+  background-color: transparent !important;
   color: white !important;
 }
