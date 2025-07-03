@@ -8,18 +8,19 @@ import ImageUpload from "../../../../Components/SharedComponents/ImageUpload/Ima
 import CustomButton from "../../../../Components/SharedComponents/CustomButton/CustomButton";
 import { useFormik } from "formik";
 import axios from "axios";
-import { BASE_URL_TWO } from "../../../../utils/config";
+import { BASE_URL_TWO, routes } from "../../../../utils/config";
 import { useInvoiceMateUser } from "../../../../context/invoiceContext";
 import { Button, Spin } from "antd";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 const CreateProduct = () => {
   const { id } = useParams();
   const { token } = useInvoiceMateUser();
   const [categories, setCategories] = useState([]);
   const [productImages, setProductImages] = useState([]);
   const [thumbnailImages, setThumbnailImages] = useState([]);
+  const navigate = useNavigate()
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -93,6 +94,7 @@ const CreateProduct = () => {
         );
         if (res?.status === 201) {
           toast("Product has been created successfully.");
+          navigate(routes.INVOICE_MATE.PRODUCT)
         }
         console.log(res, "faldsfjasdhkf3113231");
       } catch (e) {
@@ -151,7 +153,6 @@ const CreateProduct = () => {
         }
       );
       const data = res?.data ?? {};
-      console.log(res, "fasldfhalsdkhflasjk");
       formik.setValues({
         title: data?.title,
         price: data?.price,

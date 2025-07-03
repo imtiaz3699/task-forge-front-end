@@ -18,7 +18,7 @@ function CreateInvoice() {
   const { id } = useParams();
   const { token } = useInvoiceMateUser();
   const [products, setProducts] = useState([]);
-  const [searchedClient, setSearchedClients] = ('');
+  const [searchedClient, setSearchedClients] = "";
 
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
@@ -222,7 +222,7 @@ function CreateInvoice() {
             value: element?._id,
           };
         });
-        setClients(cli)
+        setClients(cli);
       }
     } catch (e) {
       console.log(e);
@@ -231,11 +231,11 @@ function CreateInvoice() {
   useEffect(() => {
     getSingleInvoie();
   }, [id]);
-   const handleChangeClient = (selectedId) => {
+  const handleChangeClient = (selectedId) => {
     const selectedClient = clients?.find((c) => c?.value === selectedId);
-    formik.setFieldValue('client_id',selectedClient?.value)
+    formik.setFieldValue("client_id", selectedClient?.value);
   };
-  console.log(formik.values, 'fasdlfajshdlfkashdl')
+  console.log(formik.values, "fasdlfajshdlfkashdl");
   return (
     <div className="px-[40px] w-full">
       <div className="flex flex-col ">
@@ -254,7 +254,7 @@ function CreateInvoice() {
               preSelect={"Please select client"}
             /> */}
             <MultiSelect
-              value = {searchedClient}
+              value={searchedClient}
               showSearh={true}
               onSearch={handleSearchClient}
               label="Client"
@@ -267,7 +267,7 @@ function CreateInvoice() {
               label="Date Issue"
               value={formik.values.date_of_issue}
               onChange={handleDateChange}
-            // disabled={!eidt}
+              // disabled={!eidt}
             />
             <CustomDatePickerTwo
               label="Due Date"

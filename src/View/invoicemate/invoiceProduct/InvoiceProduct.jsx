@@ -26,20 +26,20 @@ function InvoiceProduct() {
   const fetchProducts = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL_TWO}/product/get-all-products?product_name=${filters?.product_name}&minPrice=${filters?.minPrice}&maxPrice=${filters?.maxPrice}`,
+        `${BASE_URL_TWO}/product/get-all-products?product_name=${filters?.product_name}&minPrice=${filters?.minPrice}&maxPrice=${filters?.maxPrice}&offset=${pagination?.currentPage}&limit=${pagination?.limit}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      const data = res?.data
       if (res?.status === 200) {
-        setProducts(res?.data);
+        setProducts(res?.data?.data);
         setPagination({
-          totalPages: data?.totalPages,
-          totalResults: data?.totalResults,
-          currentPage: data?.currentPage,
+          totalPages: res?.data?.totalPages,
+          totalResults: res?.data?.totalRecords,
+          currentPage: res?.data?.currentPage,
+          limit:res?.data?.limit ?? 10
         });
       }
     } catch (e) {
@@ -48,7 +48,7 @@ function InvoiceProduct() {
   };
   useEffect(() => {
     fetchProducts();
-  }, [filters]);
+  }, [filters, pagination?.currentPage]);
   const handleFilterChange = async (e) => {
     setFilters((prev) => ({
       ...prev,
@@ -87,12 +87,12 @@ function InvoiceProduct() {
         placeholder="Search product name..."
       />
       <ProductTables data={products} fetchProducts={fetchProducts} />
-      <div className = 'flex items-center justify-end'>
-      <Pagination
-        defaultCurrent={pagination?.currentPage}
-        total={pagination?.totalResults}
-        onChange={handleChangePage}
-      />
+      <div className="flex items-center justify-end">
+        <Pagination
+          defaultCurrent={pagination?.currentPage}
+          total={pagination?.totalResults}
+          onChange={handleChangePage}
+        />
       </div>
     </div>
   );
