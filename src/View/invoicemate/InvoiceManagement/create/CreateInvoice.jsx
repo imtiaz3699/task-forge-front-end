@@ -145,7 +145,7 @@ function CreateInvoice() {
           },
         }
       );
-      const data = res?.data;
+      const data = res?.data?.data;
       if (res?.status === 200) {
         const pro = data?.map((element, idx) => {
           return {
@@ -165,7 +165,6 @@ function CreateInvoice() {
   const handleSelectClient = (e) => {
     formik.setFieldValue("client_id", e);
   };
-
   const getSingleInvoie = async () => {
     if (!id) return;
     try {
@@ -235,7 +234,6 @@ function CreateInvoice() {
     const selectedClient = clients?.find((c) => c?.value === selectedId);
     formik.setFieldValue("client_id", selectedClient?.value);
   };
-  console.log(formik.values, "fasdlfajshdlfkashdl");
   return (
     <div className="px-[40px] w-full">
       <div className="flex flex-col ">

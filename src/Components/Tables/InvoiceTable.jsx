@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router";
 
 function InvoiceTable({ data, fetchInvoices }) {
-  console.log(data,'fadslfkjahsdlfads')
+  console.log(data, "fadslfkjahsdlfads");
   const { token } = useInvoiceMateUser();
   const navigate = useNavigate();
   const handleEdit = (obj) => {
@@ -137,8 +137,8 @@ function InvoiceTable({ data, fetchInvoices }) {
             );
           })}
         </tbody>
-        <ToastContainer />
       </table>
+      <ToastContainer />
     </div>
   );
 }
