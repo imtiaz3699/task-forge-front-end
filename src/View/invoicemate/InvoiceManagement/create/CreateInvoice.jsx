@@ -19,13 +19,18 @@ const validationSchema = Yup.object({
     "Due date is required."
   ),
   status: Yup.string("Status is required.").required("Status is required."),
-  payment_method: Yup.string("Payment method is required.").required("Payment method is required."),
+  payment_method: Yup.string("Payment method is required.").required(
+    "Payment method is required."
+  ),
   notes: Yup.string("Notes is required.").required("Notes is required."),
-  terms: Yup.string("Terms is required.").required('Terms is required.'),
-  currency: Yup.string("Currency is required.").required("Currency is required."),
+  terms: Yup.string("Terms is required.").required("Terms is required."),
+  currency: Yup.string("Currency is required.").required(
+    "Currency is required."
+  ),
   product_id: Yup.array()
     .of(Yup.string().required("Invalid client id"))
-    .min(1, "At least on product is required.").required("Please select a client."),
+    .min(1, "At least on product is required.")
+    .required("Please select a client."),
   is_active: Yup.boolean(),
 });
 function CreateInvoice() {
@@ -90,8 +95,8 @@ function CreateInvoice() {
       values.products = values?.products?.map((element, idx) => ({
         unit_price: element?.price,
         product_id: element?.product_id,
-        quantity: element?.quantity,
-        total_price: element?.price * element?.quantity,
+        quantity: element?.quantity ?? 1,
+        total_price: element?.price * (element?.quantity ?? 1),
       }));
       const payload = {
         client_id: values?.client_id,
@@ -284,7 +289,7 @@ function CreateInvoice() {
     formik.setFieldValue("client_id", clientId);
     setSearchedClients(clientId);
   };
-  console.log(formik.errors, "ldfhalsdkhfal8productsss");
+  console.log(formik.values, "ldfhalsdkhfal8productsss");
   return (
     <div className="px-[40px] w-full">
       <div className="flex flex-col">

@@ -7,7 +7,7 @@ import { useInvoiceMateUser } from "../../../context/invoiceContext";
 import axios from "axios";
 import { Pagination } from "antd";
 import InvPageHeader from "../../../Components/InvoiceMate/InvPageHeader/InvPageHeader";
-
+import useDebounce from "../../../hooks/debounce";
 function InvoiceManagement() {
   const navigate = useNavigate();
   const [pagination, setPagination] = useState({
@@ -20,34 +20,38 @@ function InvoiceManagement() {
   const [filters, setFilters] = useState({
     invoice_no: "",
   });
+  const debouncedSearchTerm = useDebounce(filters?.invoice_no, 500);
+
   const [data, setData] = useState([]);
   const { token } = useInvoiceMateUser();
   const fetchInvoices = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL_TWO}/invoice/get-all-invoices?offset=${pagination?.currentPage}&invoice_number=${filters?.invoice_no}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    if (debouncedSearchTerm) {
+      try {
+        const res = await axios.get(
+          `${BASE_URL_TWO}/invoice/get-all-invoices?offset=${pagination?.currentPage}&invoice_number=${filters?.invoice_no}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = res?.data;
+        if (res?.status === 200) {
+          setData(data?.data);
+          setPagination({
+            totalPages: data?.totalPages,
+            totalResults: data?.totalResults,
+            currentPage: data?.currentPage,
+          });
         }
-      );
-      const data = res?.data;
-      if (res?.status === 200) {
-        setData(data?.data);
-        setPagination({
-          totalPages: data?.totalPages,
-          totalResults: data?.totalResults,
-          currentPage: data?.currentPage,
-        });
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
   };
   useEffect(() => {
     fetchInvoices();
-  }, [pagination?.currentPage, filters]);
+  }, [pagination?.currentPage, filters, debouncedSearchTerm]);
   const handleChangePage = (value) => {
     setPagination((prev) => ({
       ...prev,
@@ -58,6 +62,13 @@ function InvoiceManagement() {
     setFilters((prev) => ({
       ...prev,
       invoice_no: e.target.value,
+    }));
+    setPagination((prev) => ({
+      limit: 10,
+      offset: 1,
+      currentPage: 1,
+      totalPages: 1,
+      totalResults: 0,
     }));
   };
   return (
