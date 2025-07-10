@@ -9,6 +9,7 @@ function CustomDatePickerTwo({
   onChange,
   prevDisable,
   disabled,
+  error
 }) {
   const disabledDateTime = () => ({
     disabledHours: () => range(0, 24).splice(4, 20),
@@ -36,6 +37,7 @@ function CustomDatePickerTwo({
         className="!py-3 !bg-transparent !text-white border-[1px] !border-[#282541]"
         defaultValue={"fadhf"}
       />
+      <p className = 'text-[10px] text-red-500 mt-2'>{error}</p>
     </div>
   );
 }

@@ -1,10 +1,4 @@
 import { useEffect, useState } from "react";
-import CustomSelectTwo from "../../../../Components/SharedComponents/CustomSelect/CustomSelectTwo";
-import CustomInputTwo from "../../../../Components/SharedComponents/CustomInput/CustomInputTwo";
-import CustomDatePickerTwo from "../../../../Components/SharedComponents/DatePicker/CustomDatePickerTwo";
-import { RadioButton } from "../../../../Components/SharedComponents/RadioButton/RadioButton";
-import CustomButton from "../../../../Components/SharedComponents/CustomButton/CustomButton";
-import MultiSelect from "../../../../Components/SharedComponents/MultiSelect/MultiSelect";
 import { useFormik } from "formik";
 import dayjs from "dayjs";
 import { ApiFun } from "../../../../Components/apis/apis";
@@ -13,13 +7,34 @@ import { BASE_URL_TWO, routes } from "../../../../utils/config";
 import { useInvoiceMateUser } from "../../../../context/invoiceContext";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
+import CreateInvoiceForm from "./Form";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+  client_id: Yup.string().required("Invalid client Id"),
+  date_of_issue: Yup.string("Date of issue is required.").required(
+    "Date of issue is required."
+  ),
+  due_date: Yup.string("Due date is required.").required(
+    "Due date is required."
+  ),
+  status: Yup.string("Status is required.").required("Status is required."),
+  payment_method: Yup.string("Payment method is required.").required("Payment method is required."),
+  notes: Yup.string("Notes is required.").required("Notes is required."),
+  terms: Yup.string("Terms is required.").required('Terms is required.'),
+  currency: Yup.string("Currency is required.").required("Currency is required."),
+  product_id: Yup.array()
+    .of(Yup.string().required("Invalid client id"))
+    .min(1, "At least on product is required.").required("Please select a client."),
+  is_active: Yup.boolean(),
+});
 function CreateInvoice() {
   const { product, client } = ApiFun();
   const { id } = useParams();
   const { token } = useInvoiceMateUser();
   const [products, setProducts] = useState([]);
-  const [searchedClient, setSearchedClients] = "";
-
+  const [searchedClient, setSearchedClients] = useState("");
+  const [fetchedProducts, setFetchedProducts] = useState([]);
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const status = [
@@ -59,7 +74,6 @@ function CreateInvoice() {
   const formik = useFormik({
     initialValues: {
       client_id: "",
-      invoice_number: "",
       date_of_issue: "",
       due_date: "",
       status: "",
@@ -68,12 +82,19 @@ function CreateInvoice() {
       terms: "",
       currency: "",
       product_id: [],
+      products: [],
       tax_included: false,
     },
+    validationSchema,
     onSubmit: async (values, { resetForm }) => {
+      values.products = values?.products?.map((element, idx) => ({
+        unit_price: element?.price,
+        product_id: element?.product_id,
+        quantity: element?.quantity,
+        total_price: element?.price * element?.quantity,
+      }));
       const payload = {
         client_id: values?.client_id,
-        invoice_number: values?.invoice_number,
         date_of_issue: dayjs(values?.date_of_issue).format("YYYY-MM-DD"),
         due_date: dayjs(values?.due_date).format("YYYY-MM-DD"),
         status: values?.status,
@@ -82,6 +103,7 @@ function CreateInvoice() {
         terms: values?.terms,
         currency: values?.currency,
         product_id: values?.product_id,
+        products: values?.products,
         tax_included: values?.tax_included,
       };
 
@@ -116,10 +138,6 @@ function CreateInvoice() {
       }
     },
   });
-
-  // const handleChangeClient = (e) => {
-  //   formik.setFieldValue("client_id", e.target.value);
-  // };
   const handleDateChange = (date) => {
     formik.setFieldValue("date_of_issue", dayjs(date));
   };
@@ -153,6 +171,7 @@ function CreateInvoice() {
             value: element?._id,
           };
         });
+        setFetchedProducts(data);
         setProducts(pro);
       }
     } catch (e) {
@@ -160,7 +179,35 @@ function CreateInvoice() {
     }
   };
   const handleSelectProduct = (e) => {
-    formik.setFieldValue("product_id", e);
+    const isRemoving = formik.values?.products?.length > e?.length;
+    if (isRemoving) {
+      const removedProducts = formik.values?.products?.filter((p) =>
+        e?.includes(p?.product_id)
+      );
+      formik.setFieldValue("products", removedProducts);
+      formik.setFieldValue("product_id", e);
+    } else {
+      const product = new Map(fetchedProducts.map((p) => [p._id, p]));
+
+      const matchedProducts = e?.map((id) => product.get(id)).filter(Boolean);
+      const isExists = matchedProducts?.filter((element) => {
+        const found = formik.values.products?.some(
+          (p) => p?.product_id === element?._id
+        );
+        return !found;
+      });
+      const newProducts = isExists?.map((pro) => ({
+        product_id: pro?._id,
+        title: pro?.title,
+        price: pro?.price,
+      }));
+      const nProducts = [...formik.values.products, ...newProducts];
+      formik.setFieldValue("products", nProducts);
+      formik.setFieldValue("product_id", e);
+    }
+    if (!e?.length) {
+      return;
+    }
   };
   const handleSelectClient = (e) => {
     formik.setFieldValue("client_id", e);
@@ -180,7 +227,6 @@ function CreateInvoice() {
       if (res?.status === 200) {
         formik.setValues({
           client_id: data?.client_id,
-          invoice_number: data?.invoice_number,
           date_of_issue: dayjs(data?.date_of_issue),
           due_date: dayjs(data?.due_date),
           status: data?.status,
@@ -221,6 +267,7 @@ function CreateInvoice() {
             value: element?._id,
           };
         });
+
         setClients(cli);
       }
     } catch (e) {
@@ -232,109 +279,35 @@ function CreateInvoice() {
   }, [id]);
   const handleChangeClient = (selectedId) => {
     const selectedClient = clients?.find((c) => c?.value === selectedId);
-    formik.setFieldValue("client_id", selectedClient?.value);
+    if (!selectedClient) return;
+    const clientId = selectedClient.value;
+    formik.setFieldValue("client_id", clientId);
+    setSearchedClients(clientId);
   };
+  console.log(formik.errors, "ldfhalsdkhfal8productsss");
   return (
     <div className="px-[40px] w-full">
-      <div className="flex flex-col ">
+      <div className="flex flex-col">
         <h1 className="font-medium text-[22px] text-white">Invoice </h1>
         <p className="text-[18px] text-gray-400">Enter invoice details.</p>
       </div>
-      <form onSubmit={formik.handleSubmit}>
-        <div className="flex flex-col gap-[40px] mt-5">
-          <div className="flex flex-row items-center gap-[40px] justify-between w-full">
-            {/* <CustomSelectTwo
-              label="Client"
-              name="client_id"
-              value={formik.values.client_id}
-              onChange={handleChangeClient}
-              options={clients}
-              preSelect={"Please select client"}
-            /> */}
-            <MultiSelect
-              value={searchedClient}
-              showSearh={true}
-              onSearch={handleSearchClient}
-              label="Client"
-              options={clients}
-              onChange={handleChangeClient}
-            />
-          </div>
-          <div className="flex flex-row items-center gap-[40px] justify-between w-full">
-            <CustomDatePickerTwo
-              label="Date Issue"
-              value={formik.values.date_of_issue}
-              onChange={handleDateChange}
-              // disabled={!eidt}
-            />
-            <CustomDatePickerTwo
-              label="Due Date"
-              value={formik.values.due_date}
-              onChange={handleDueDate}
-            />
-          </div>
-          <div className="flex flex-row items-center gap-[40px] justify-between max-w-full  ">
-            <CustomSelectTwo
-              label="Status"
-              options={status}
-              preSelect={"Select Status"}
-              name="status"
-              value={formik.values.status}
-              onChange={handleChange}
-            />
-            <CustomSelectTwo
-              label="Payment Method"
-              options={paymentMethods}
-              onChange={handleChange}
-              preSelect={"Select Payment Method"}
-              name="payment_method"
-              value={formik.values.payment_method}
-            />
-          </div>
-          <div className="flex flex-row items-center gap-[40px] justify-between max-w-full  ">
-            <CustomInputTwo
-              label="Notes"
-              name="notes"
-              value={formik.values.notes}
-              onChange={formik.handleChange}
-            />
-            <CustomInputTwo
-              label="Terms"
-              name="terms"
-              value={formik.values.terms}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div className="flex flex-row items-center gap-[40px] justify-between max-w-full  ">
-            <CustomSelectTwo
-              label="Currency"
-              value={formik.values.currency}
-              options={currency}
-              preSelect={"Select Currency"}
-              onChange={handleChange}
-            />
-            <MultiSelect
-              onSearch={handleSearchProduct}
-              label="Products"
-              options={products}
-              onChange={handleSelectProduct}
-            />
-          </div>
-          <div className="w-full">
-            <RadioButton
-              label="Tax Included"
-              checked={formik.values.tax_included}
-              name="tax_included"
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div className="flex items-center justify-end max-w-full gap-5">
-            <CustomButton label="Cancel" cancelButton={true} />
-            <CustomButton label="Submit" type="submit" />
-          </div>
-        </div>
-        <ToastContainer />
-      </form>
+      <CreateInvoiceForm
+        formik={formik}
+        searchedClient={searchedClient}
+        handleSearchClient={handleSearchClient}
+        clients={clients}
+        handleChangeClient={handleChangeClient}
+        handleDateChange={handleDateChange}
+        handleDueDate={handleDueDate}
+        status={status}
+        handleChange={handleChange}
+        paymentMethods={paymentMethods}
+        handleSearchProduct={handleSearchProduct}
+        products={products}
+        handleSelectProduct={handleSelectProduct}
+        currency={currency}
+      />
+      <ToastContainer />
     </div>
   );
 }

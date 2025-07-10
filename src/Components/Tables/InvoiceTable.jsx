@@ -6,14 +6,15 @@ import { BASE_URL_TWO, routes } from "../../utils/config";
 import { useInvoiceMateUser } from "../../context/invoiceContext";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
 function InvoiceTable({ data, fetchInvoices }) {
-  console.log(data, "fadslfkjahsdlfads");
   const { token } = useInvoiceMateUser();
   const navigate = useNavigate();
   const handleEdit = (obj) => {
     navigate(`${routes.INVOICE_MATE.UPDATE_INVOICE}/${obj?._id}`);
   };
+
   const generateItems = (obj) => {
     const arr = ["Edit", "Delete"];
     return arr.map((element, idx) => {
@@ -28,7 +29,6 @@ function InvoiceTable({ data, fetchInvoices }) {
             title="Delete the category"
             description="Are you sure to delete this category?"
             onConfirm={() => handleDelete(obj?._id)}
-            // onCancel={cancel}
             okText="Yes"
             cancelText="No"
           >
@@ -38,6 +38,7 @@ function InvoiceTable({ data, fetchInvoices }) {
       };
     });
   };
+
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
@@ -58,6 +59,9 @@ function InvoiceTable({ data, fetchInvoices }) {
       });
     }
   };
+
+  
+
   return (
     <div className="relative overflow-y-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

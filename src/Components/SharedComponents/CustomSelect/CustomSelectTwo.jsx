@@ -1,6 +1,6 @@
 import React from "react";
 
-function CustomSelectTwo({ label, options, preSelect, name, onChange, value }) {
+function CustomSelectTwo({ label, options, preSelect, name, onChange, value,error }) {
   const handleChange = () => {};
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -22,6 +22,7 @@ function CustomSelectTwo({ label, options, preSelect, name, onChange, value }) {
           );
         })}
       </select>
+      <p className = 'text-red-500 text-[10px]'>{error}</p>
     </div>
   );
 }
