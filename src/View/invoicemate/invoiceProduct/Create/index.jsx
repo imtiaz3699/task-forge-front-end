@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomInputTwo from "../../../../Components/SharedComponents/CustomInput/CustomInputTwo";
 import CustomTextArea from "../../../../Components/SharedComponents/CustomTextArea/CustomTextArea";
 import CustomSelectTwo from "../../../../Components/SharedComponents/CustomSelect/CustomSelectTwo";
@@ -20,7 +20,7 @@ const CreateProduct = () => {
   const [categories, setCategories] = useState([]);
   const [productImages, setProductImages] = useState([]);
   const [thumbnailImages, setThumbnailImages] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -53,9 +53,7 @@ const CreateProduct = () => {
           width: values?.dimensions?.width,
           depth: values?.dimensions?.depth,
         },
-        images: [""],
-        thumbnail: [""],
-        category: values?.category,
+        category: values?.category?._id ?? values?.category,
         tags: values?.tags,
         isActive: values?.isActive,
         isFeatured: values?.isFeatured,
@@ -70,33 +68,66 @@ const CreateProduct = () => {
         thumbnailImages?.forEach((file) => {
           formData.append("thumbnail_images", file?.originFileObj);
         });
-        const img = await axios.post(
-          `${BASE_URL_TWO}/product/upload-images`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+
+        if (!id) {
+          const img = await axios.post(
+            `${BASE_URL_TWO}/product/upload-images`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (img?.status === 201) {
+            payload.thumbnail = img?.data?.thumbnail_images;
+            payload.images = img?.data?.product_images;
           }
-        );
-        if (img?.status === 201) {
-          payload.thumbnail = img?.data?.thumbnail_images;
-          payload.images = img?.data?.product_images;
-        }
-        const res = await axios.post(
-          `${BASE_URL_TWO}/product/create`,
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+          const res = await axios.post(
+            `${BASE_URL_TWO}/product/create`,
+            payload,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (res?.status === 201) {
+            toast("Product has been created successfully.");
+            navigate(routes.INVOICE_MATE.PRODUCT);
           }
-        );
-        if (res?.status === 201) {
-          toast("Product has been created successfully.");
-          navigate(routes.INVOICE_MATE.PRODUCT)
+        } else {
+          const img = await axios.post(
+            `${BASE_URL_TWO}/product/upload-images`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (img?.status === 201) {
+            if (img?.data?.thumbnail_images?.length > 0) {
+              payload.thumbnail = img?.data?.thumbnail_images;
+            }
+            if (img?.data?.product_images?.length > 0) {
+              payload.images = img?.data?.product_images;
+            }
+          }
+          const res = await axios.put(
+            `${BASE_URL_TWO}/product/update/${id}`,
+            payload,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (res?.status === 200) {
+            toast("Product has been created successfully.");
+            navigate(routes.INVOICE_MATE.PRODUCT);
+          }
         }
-        console.log(res, "faldsfjasdhkf3113231");
       } catch (e) {
         console.log(e);
       }
@@ -153,6 +184,7 @@ const CreateProduct = () => {
         }
       );
       const data = res?.data ?? {};
+      console.log(data, "fasdlfkjhasdkfas");
       formik.setValues({
         title: data?.title,
         price: data?.price,
@@ -169,6 +201,8 @@ const CreateProduct = () => {
         isFeatured: data?.isFeatured,
         tags: data?.tags ?? [],
         quantity: data?.quantity ?? 0,
+        images: data?.images,
+        thumbnail: data?.thumbnail,
       });
       setProductImages(data?.images);
       setThumbnailImages(data?.thumbnail);

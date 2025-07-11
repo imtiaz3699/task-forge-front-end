@@ -22,7 +22,9 @@ function CreateInvoiceForm({
   products,
   handleSelectProduct,
   currency,
+  searchProducts
 }) {
+  console.log(searchProducts,'searchProducts')
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="flex flex-col gap-[40px] mt-5">
@@ -100,6 +102,7 @@ function CreateInvoiceForm({
           <div className="flex flex-col items-start gap-3 w-full">
             <MultiSelect
               onSearch={handleSearchProduct}
+              searchedProducts = {searchProducts}
               label="Products"
               options={products ?? []}
               onChange={handleSelectProduct}

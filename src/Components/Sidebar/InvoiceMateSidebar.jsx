@@ -1,6 +1,6 @@
 import { routes } from "../../utils/config";
 import { Category, Product } from "../../utils/icons";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useMatch, useNavigate } from "react-router";
 import { MdDashboard } from "react-icons/md";
 import { FaPersonShelter } from "react-icons/fa6";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
@@ -27,19 +27,28 @@ function InvoiceMateSidebar() {
       name: "Invoices",
       url: routes.INVOICE_MATE.INVOICE_MANAGEMENT,
       icon: <FaFileInvoiceDollar />,
-      children: [routes.INVOICE_MATE.CREATE_INVOICE],
+      children: [
+        routes.INVOICE_MATE.CREATE_INVOICE,
+        routes.INVOICE_MATE.UPDATE_INVOICE,
+      ],
     },
     {
       name: "Clients",
       url: routes.INVOICE_MATE.CLIENT_MANAGEMENT,
       icon: <FaPersonShelter />,
-      children:[routes.INVOICE_MATE.CREATE_CLIENT,routes.INVOICE_MATE.UPDATE_CLIENT]
+      children: [
+        routes.INVOICE_MATE.CREATE_CLIENT,
+        routes.INVOICE_MATE.UPDATE_CLIENT,
+      ],
     },
     {
       name: "Products",
       url: routes.INVOICE_MATE.PRODUCT,
       icon: <Product />,
-      children: [routes.INVOICE_MATE.CREATE_PRODUCT,routes.INVOICE_MATE.UPDATE_PRODUCT],
+      children: [
+        routes.INVOICE_MATE.CREATE_PRODUCT,
+        routes.INVOICE_MATE.UPDATE_PRODUCT,
+      ],
     },
     {
       name: "Category",
@@ -62,6 +71,7 @@ function InvoiceMateSidebar() {
       navigate(element);
     }
   };
+  const normalize = (path) => path.toLowerCase().replace(/\/+$/, "");
   return (
     <div className="w-[250px] h-screen flex flex-col justify-between gap-5 pl-5 pr-2 py-5 bg-[#1E1C30] shadow-2xl">
       <div className="flex flex-col gap-10">
@@ -71,10 +81,16 @@ function InvoiceMateSidebar() {
         </div>
         <div className="flex flex-col gap-2">
           {data?.map((element, idx) => {
-            const isActive =
-              pathName === element?.url ||
-              element?.children?.includes(pathName) ||
-              (element?.url && pathName.startsWith(element.url));
+            const currentPath = normalize(pathName);
+            const itemUrl = normalize(element?.url);
+            const isExactMatch = currentPath === itemUrl;
+            const isNestedMatch = currentPath.startsWith(itemUrl + "/");
+            const isChildMatch = element?.children?.some(
+              (childPath) =>
+                currentPath.startsWith(normalize(childPath) + "/") ||
+                currentPath === normalize(childPath)
+            );
+            const isActive = isExactMatch || isNestedMatch || isChildMatch;
             return (
               <div
                 onClick={() => handleRedirect(element?.url)}

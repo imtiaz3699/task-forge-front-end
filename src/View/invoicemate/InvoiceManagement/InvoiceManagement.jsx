@@ -25,32 +25,32 @@ function InvoiceManagement() {
   const [data, setData] = useState([]);
   const { token } = useInvoiceMateUser();
   const fetchInvoices = async () => {
-    if (debouncedSearchTerm) {
-      try {
-        const res = await axios.get(
-          `${BASE_URL_TWO}/invoice/get-all-invoices?offset=${pagination?.currentPage}&invoice_number=${filters?.invoice_no}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = res?.data;
-        if (res?.status === 200) {
-          setData(data?.data);
-          setPagination({
-            totalPages: data?.totalPages,
-            totalResults: data?.totalResults,
-            currentPage: data?.currentPage,
-          });
+    try {
+      const res = await axios.get(
+        `${BASE_URL_TWO}/invoice/get-all-invoices?offset=${pagination?.currentPage}&invoice_number=${filters?.invoice_no}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (e) {
-        console.log(e);
+      );
+      const data = res?.data;
+      if (res?.status === 200) {
+        setData(data?.data);
+        setPagination({
+          totalPages: data?.totalPages,
+          totalResults: data?.totalResults,
+          currentPage: data?.currentPage,
+        });
       }
+    } catch (e) {
+      console.log(e);
     }
   };
   useEffect(() => {
-    fetchInvoices();
+    if (debouncedSearchTerm !== undefined) {
+      fetchInvoices();
+    }
   }, [pagination?.currentPage, filters, debouncedSearchTerm]);
   const handleChangePage = (value) => {
     setPagination((prev) => ({

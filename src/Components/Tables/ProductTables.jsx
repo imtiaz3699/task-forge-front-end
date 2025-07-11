@@ -154,7 +154,7 @@ function ProductTables({ data,fetchProducts,handleFilterChange }) {
                   {element?.category?.title}
                 </td>
                 <td className="px-6 py-4 uppercase">
-                  {element?.quantity ? 0 : element?.quantity}
+                  {element?.quantity ? element?.quantity : 0}
                 </td>
                 <td className="px-6 py-4 uppercase">
                   {element?.isActive ? "Yes" : "No"}

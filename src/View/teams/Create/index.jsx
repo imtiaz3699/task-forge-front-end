@@ -100,15 +100,8 @@ function CreateTeams() {
         if (teams?.status === 200) {
           formik.setFieldValue("team_title", data?.team_title);
           formik.setFieldValue("manager", data?.manager);
-          // const options = res?.data?.data?.map((element, idx) => ({
-          //   label: element?.name,
-          //   value: element?._id,
-          // }));
           formik.setFieldValue("team_lead", data?.team_lead);
-
           handleChange(data?.team_members);
-          // formik.setFieldValue('team_members',data?.team_members);
-          console.log(data, "fadsflajhsdlfjasdfk");
         }
       }
     } catch (e) {

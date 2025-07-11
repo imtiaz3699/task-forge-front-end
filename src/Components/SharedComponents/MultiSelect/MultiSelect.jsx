@@ -8,9 +8,10 @@ function MultiSelect({
   showSearh = false,
   value,
   error,
+  searchProducts
 }) {
   const { Option } = Select;
-  console.log(value, "fasdlfkahsdkf");
+  console.log(options, "1c13sa123asd2f13ad2s1");
   return (
     <>
       {showSearh ? (

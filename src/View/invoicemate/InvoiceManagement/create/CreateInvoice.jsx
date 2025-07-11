@@ -123,6 +123,12 @@ function CreateInvoice() {
               },
             }
           );
+          console.log(res,'fasdlfahsdfkhasdfasdk')
+          if (res?.status === 200) {
+            toast("Invocie has been created successfully!");
+            navigate(routes.INVOICE_MATE.INVOICE_MANAGEMENT);
+          }
+          
         } else {
           const res = await axios.post(
             `${BASE_URL_TWO}/invoice/create`,
@@ -214,9 +220,6 @@ function CreateInvoice() {
       return;
     }
   };
-  const handleSelectClient = (e) => {
-    formik.setFieldValue("client_id", e);
-  };
   const getSingleInvoie = async () => {
     if (!id) return;
     try {
@@ -229,9 +232,10 @@ function CreateInvoice() {
         }
       );
       const data = res?.data;
+
       if (res?.status === 200) {
         formik.setValues({
-          client_id: data?.client_id,
+          client_id: data?.client_id?._id,
           date_of_issue: dayjs(data?.date_of_issue),
           due_date: dayjs(data?.due_date),
           status: data?.status,
@@ -239,15 +243,29 @@ function CreateInvoice() {
           notes: data?.notes,
           terms: data?.terms,
           currency: data?.currency,
-          product_id: data?.product_id,
+          product_id: data?.product_id?.map((element, idx) => element?._id),
+          products: data?.products?.map((element, idx) => ({
+            quantity: element?.quantity,
+            total_price: element?.total_price,
+            unit_price: element?.unit_price,
+            title: element?.product_id?.title,
+          })),
           tax_included: data?.tax_included,
         });
+
         const pro = data?.product_id?.map((element, idx) => {
           return {
             label: element?.title,
             value: element?._id,
           };
         });
+        setSearchedClients(data?.client_id?._id);
+        setClients([
+          {
+            label: data?.client_id?.full_name,
+            value: data?.client_id?._id,
+          },
+        ]);
         setProducts(pro);
       }
     } catch (e) {
@@ -289,7 +307,6 @@ function CreateInvoice() {
     formik.setFieldValue("client_id", clientId);
     setSearchedClients(clientId);
   };
-  console.log(formik.values, "ldfhalsdkhfal8productsss");
   return (
     <div className="px-[40px] w-full">
       <div className="flex flex-col">
