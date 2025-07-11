@@ -14,6 +14,7 @@ export const routes = {
   UPDATE_TEAMS: "/admin/update-teams",
   VIEW_TEAMS: "/admin/teams/view-team",
   CREATE_TASK_TEAMS: "/admin/teams/create-task",
+  
   INVOICE_MATE: {
     INDEX:"/invoice-mate",
     SIGNUP:"/invoice-mate/signup",
@@ -31,7 +32,8 @@ export const routes = {
     CATEGORIES:"/invoice-mate/category",
     CLIENT_MANAGEMENT:"/invoice-mate/client-management",
     CREATE_CLIENT:"/invoice-mate/create-client",
-    UPDATE_CLIENT:"/invoice-mate/update-client"
+    UPDATE_CLIENT:"/invoice-mate/update-client",
+    SUCCESS_PAGE:"/invoice-mate/registration-successfull"
   },
 };
 export const statusOptions = [

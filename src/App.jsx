@@ -34,6 +34,7 @@ import InvoiceProduct from "./View/invoicemate/invoiceProduct/InvoiceProduct";
 import CreateProduct from "./View/invoicemate/invoiceProduct/Create";
 import Category from "./View/invoicemate/Category";
 import CreateClient from "./View/invoicemate/ClientManagement/Form/CreateClient";
+import RegistrationSuccessful from "./View/invoicemate/registerSuccessful";
 const InvoiceDashboard = React.lazy(() =>
   import("./View/invoicemate/invoiceDashboard/InvoiceDashboard")
 );
@@ -82,6 +83,10 @@ function App() {
 
                 {/* InvoiceMate App Routes */}
                 <Route path="/invoice-mate" element={<InvoiceLayout />}>
+                  <Route
+                    path="registration-successfull"
+                    element={<RegistrationSuccessful />}
+                  />
                   <Route index element={<InvoiceAuth />} />
                   <Route path="signup" element={<InvoiceSignup />} />
                   <Route element={<InvoiceSubLayout />}>
@@ -94,10 +99,7 @@ function App() {
                       path="client-management"
                       element={<ClientManagement />}
                     />
-                    <Route
-                      path="create-client"
-                      element={<CreateClient />}
-                    />
+                    <Route path="create-client" element={<CreateClient />} />
                     <Route
                       path="update-client/:id"
                       element={<CreateClient />}
@@ -106,10 +108,7 @@ function App() {
                       path="invoice-management"
                       element={<InvoiceManagement />}
                     />
-                    <Route
-                      path="create-invoice"
-                      element={<CreateInvoice />}
-                    />
+                    <Route path="create-invoice" element={<CreateInvoice />} />
                     <Route
                       path="invoice-update/:id"
                       element={<CreateInvoice />}
@@ -118,26 +117,14 @@ function App() {
                       path="expense-management"
                       element={<ExpenseManagement />}
                     />
-                    <Route
-                      path="product"
-                      element={<InvoiceProduct />}
-                    />
-                    <Route
-                      path="create-product"
-                      element={<CreateProduct />}
-                    />
+                    <Route path="product" element={<InvoiceProduct />} />
+                    <Route path="create-product" element={<CreateProduct />} />
                     <Route
                       path="update-product/:id"
                       element={<CreateProduct />}
                     />
-                    <Route
-                      path="category"
-                      element={<Category />}
-                    />
-                    <Route
-                      path="settings/:id"
-                      element={<InvoiceSettings />}
-                    />
+                    <Route path="category" element={<Category />} />
+                    <Route path="settings/:id" element={<InvoiceSettings />} />
                   </Route>
                 </Route>
 
