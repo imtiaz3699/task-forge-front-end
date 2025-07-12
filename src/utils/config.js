@@ -33,7 +33,8 @@ export const routes = {
     CLIENT_MANAGEMENT:"/invoice-mate/client-management",
     CREATE_CLIENT:"/invoice-mate/create-client",
     UPDATE_CLIENT:"/invoice-mate/update-client",
-    SUCCESS_PAGE:"/invoice-mate/registration-successfull"
+    SUCCESS_PAGE:"/invoice-mate/registration-successfull",
+    USER_VERIFIED:"/invoice-mate/user-verified"
   },
 };
 export const statusOptions = [

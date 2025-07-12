@@ -1,9 +1,8 @@
 import React from "react";
 import { useInvoiceMateUser } from "../../../context/invoiceContext";
-import CustomInput from "../../../Components/SharedComponents/CustomInput";
 import CustomInputTwo from "../../../Components/SharedComponents/CustomInput/CustomInputTwo";
 import { BackArrow } from "../../../utils/icons";
-import { useNavigate, useOutlet, useOutletContext } from "react-router";
+import { useNavigate } from "react-router";
 import { BASE_URL_TWO, routes } from "../../../utils/config";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,7 +10,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 function InvoiceAuth() {
   const navigate = useNavigate();
-  const { token,user,setUser,setToken } = useInvoiceMateUser();
+  const { token, user, setUser, setToken } = useInvoiceMateUser();
   const validation = Yup.object({
     email: Yup.string().required("Email is required."),
     password: Yup.string()
@@ -27,12 +26,14 @@ function InvoiceAuth() {
     validationSchema: validation,
     onSubmit: async (values, { setSubmitting, resetForm, setFieldValue }) => {
       const payload = {
-        email:values?.email,
-        password:values?.password
-      }
+        email: values?.email,
+        password: values?.password,
+      };
       try {
-        const response = await axios.post(BASE_URL_TWO + "/auth/login", payload);
-        
+        const response = await axios.post(
+          BASE_URL_TWO + "/auth/login",
+          payload
+        );
         if (response?.status === 200) {
           resetForm();
           Cookies.set(
@@ -56,7 +57,7 @@ function InvoiceAuth() {
       }
     },
   });
-  console.log(token,user,'fadlsfjk')
+  console.log(token, user, "fadlsfjk");
   return (
     <div className=" w-full h-screen bg-[#1C1A2E] flex items-center justify-center ">
       <div className="w-full max-w-[500px] h-full px-5 py-5 flex flex-col gap-5 justify-between">

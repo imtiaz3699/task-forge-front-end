@@ -85,7 +85,27 @@ function App() {
                 <Route path="/invoice-mate" element={<InvoiceLayout />}>
                   <Route
                     path="registration-successfull"
-                    element={<RegistrationSuccessful />}
+                    element={
+                      <RegistrationSuccessful
+                        heading="Registration Successfull!"
+                        description={
+                          "Please check your inbox to verify your account."
+                        }
+                        success = {true}
+                      />
+                    }
+                  />
+                  <Route
+                    path="user-verified"
+                    element={
+                      <RegistrationSuccessful
+                        heading="Verification successful"
+                        description={
+                          "Your email verification is successfull congradulation now you can login to invoice-mate."
+                        }
+                        verified = {true}
+                      />
+                    }
                   />
                   <Route index element={<InvoiceAuth />} />
                   <Route path="signup" element={<InvoiceSignup />} />

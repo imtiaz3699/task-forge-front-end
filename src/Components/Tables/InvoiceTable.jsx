@@ -14,9 +14,21 @@ function InvoiceTable({ data, fetchInvoices }) {
   const handleEdit = (obj) => {
     navigate(`${routes.INVOICE_MATE.UPDATE_INVOICE}/${obj?._id}`);
   };
-
+  const handleSendInvoice = async (id) => {
+    console.log(id,'fadslfjhasdlkfsd')
+    try {
+      const res = await axios.get(`${BASE_URL_TWO}/invoice/send-invoice/${id}`,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      console.log(res,'fasdlfjahsldkfjhasdkfjhasdkj')
+    }catch (e) {
+      console.log(e,'')
+    }
+  }
   const generateItems = (obj) => {
-    const arr = ["Edit", "Delete"];
+    const arr = ["Edit", "Delete", "Send Invoice"];
     return arr.map((element, idx) => {
       const key = (idx + 1).toString();
       const isEdit = element === "Edit";
@@ -24,6 +36,16 @@ function InvoiceTable({ data, fetchInvoices }) {
         key,
         label: isEdit ? (
           <div onClick={() => handleEdit(obj)}>{element}</div>
+        ) : element === "Send Invoice" ? (
+          <Popconfirm
+            title="Are you sure ?"
+            description="Are you sure you want to send this invoice ?"
+            onConfirm={() => handleSendInvoice(obj?._id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <div>{element}</div>
+          </Popconfirm>
         ) : (
           <Popconfirm
             title="Delete the category"
@@ -59,8 +81,6 @@ function InvoiceTable({ data, fetchInvoices }) {
       });
     }
   };
-
-  
 
   return (
     <div className="relative overflow-y-auto shadow-md sm:rounded-lg">
