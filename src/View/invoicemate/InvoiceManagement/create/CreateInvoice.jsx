@@ -59,6 +59,10 @@ function CreateInvoice() {
       label: "Draft",
       value: "draft",
     },
+    {
+      label:"Rejected",
+      value:"rejected"
+    }
   ];
   const paymentMethods = [
     {
