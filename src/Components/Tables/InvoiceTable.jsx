@@ -15,14 +15,12 @@ function InvoiceTable({ data, fetchInvoices }) {
     navigate(`${routes.INVOICE_MATE.UPDATE_INVOICE}/${obj?._id}`);
   };
   const handleSendInvoice = async (id) => {
-    console.log(id,'fadslfjhasdlkfsd')
     try {
       const res = await axios.get(`${BASE_URL_TWO}/invoice/send-invoice/${id}`,{
         headers:{
           Authorization:`Bearer ${token}`
         }
       })
-      console.log(res,'fasdlfjahsldkfjhasdkfjhasdkj')
     }catch (e) {
       console.log(e,'')
     }

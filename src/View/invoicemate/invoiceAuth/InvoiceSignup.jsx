@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useInvoiceMateUser } from "../../../context/invoiceContext";
 import CustomInput from "../../../Components/SharedComponents/CustomInput";
 import CustomInputTwo from "../../../Components/SharedComponents/CustomInput/CustomInputTwo";
@@ -32,6 +32,7 @@ const validationSchema = Yup.object().shape({
     .max(new Date(), "Date of birth cannot be in the future"),
 });
 function InvoiceSignup() {
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { user } = useInvoiceMateUser();
 
@@ -47,12 +48,12 @@ function InvoiceSignup() {
     onSubmit: async (values, { resetForm }) => {
       try {
         const res = await axios.post(`${BASE_URL_TWO}/users/register`, values);
-        console.log(res, "asdlfkjahsdfkjasdfk");
-        // if (res?.status === 201) {
-        //   navigate(routes.INVOICE_MATE.SUCCESS_PAGE);
-        // }
+        if (res?.status === 201) {
+          navigate(routes.INVOICE_MATE.SUCCESS_PAGE);
+        }
       } catch (e) {
-        console.log(e);
+        console.log(e, "flasdjhflkasjhkjdas");
+        setError(e?.response?.data?.message);
       }
     },
   });
@@ -133,6 +134,7 @@ function InvoiceSignup() {
               // disabled={!eidt}
             />
           </div>
+          {error && <p className = 'text-red-500 text-[12px]'>{error}</p>}
           <button
             type="submit"
             className="bg-[#C8EE44] hover:bg-[#c9ee44cb] text-[#1B212D] text-[16px] font-medium rounded-[10px] py-[14px] cursor-pointer  "
