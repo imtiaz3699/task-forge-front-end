@@ -7,6 +7,7 @@ import axios from "axios";
 import { useInvoiceMateUser } from "../../../context/invoiceContext";
 import InvPageHeader from "../../../Components/InvoiceMate/InvPageHeader/InvPageHeader";
 import { Pagination } from "antd";
+import socket from "../../../socket/socket";
 function InvoiceProduct() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -74,6 +75,23 @@ function InvoiceProduct() {
       currentPage: value,
     }));
   };
+  useEffect(() => {
+    socket.on("productCreated", (product) => {
+      setProducts((prev) => [product, ...prev]);
+    });
+    socket.on("productDeleted", (productId) => {
+      setProducts((prev) => prev.filter((p) => p?._id !== productId));
+    });
+    socket.on("productUpdated", (product) => {
+      console.log(product,'fadslfkahsdfk')
+      setProducts((prev) => [product, ...prev]);
+    });
+    return () => {
+      socket.off("productCreated");
+      socket.off("productDeleted");
+      socket.off("productUpdated");
+    };
+  }, []);
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <InvPageHeader

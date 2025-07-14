@@ -8,6 +8,7 @@ import axios from "axios";
 import { Pagination } from "antd";
 import InvPageHeader from "../../../Components/InvoiceMate/InvPageHeader/InvPageHeader";
 import useDebounce from "../../../hooks/debounce";
+import socket from "../../../socket/socket";
 function InvoiceManagement() {
   const navigate = useNavigate();
   const [pagination, setPagination] = useState({
@@ -71,6 +72,28 @@ function InvoiceManagement() {
       totalResults: 0,
     }));
   };
+  useEffect(() => {
+    socket.on("invoiceCreated", (invoice) => {
+      setData((prev) => [invoice, ...prev]);
+    });
+
+    socket.on("invoiceDeleted", (invoiceId) => {
+      setData((prev) => prev.filter((p) => p?._id !== invoiceId));
+    });
+
+    socket.on("invoiceUpdated", (invoice) => {
+      console.log("Invoice updated:", invoice);
+      setData((prev) =>
+        prev.map((inv) => (inv._id === invoice._id ? invoice : inv))
+      );
+    });
+
+    return () => {
+      socket.off("invoiceCreated");
+      socket.off("invoiceDeleted");
+      socket.off("invoiceUpdated");
+    };
+  }, []);
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <InvPageHeader

@@ -5,6 +5,7 @@ import ClientTable from "../../../Components/Tables/ClientTable";
 import axios from "axios";
 import { useInvoiceMateUser } from "../../../context/invoiceContext";
 import { Pagination } from "antd";
+import socket from "../../../socket/socket";
 
 function ClientManagement() {
   const [filters, setFilters] = useState({
@@ -29,7 +30,7 @@ function ClientManagement() {
           },
         }
       );
-      const data = res.data
+      const data = res.data;
       if (res?.status === 200) {
         setData(res?.data?.data);
         setPagination({
@@ -57,6 +58,22 @@ function ClientManagement() {
       currentPage: value,
     }));
   };
+  useEffect(() => {
+    socket.on("clientCreated", (client) => {
+      setData((prev) => [client, ...prev]);
+    });
+    socket.on("clientUpdated", (client) => {
+      setData((prev) => [client, ...prev]);
+    });
+    socket.on("clientDeleted", (id) => {
+      setData((prev) => prev.filter((c) => c?._id !== id));
+    });
+    return () => {
+      socket.off("clientCreated");
+      socket.off("clientUpdated");
+      socket.on("clientDeleted");
+    };
+  }, []);
   return (
     <div className="px-[40px] flex flex-col h-screen overflow-auto gap-[25px] scroll-thin">
       <InvPageHeader
@@ -67,7 +84,7 @@ function ClientManagement() {
         handleFilterChange={handleFilterChange}
       />
       <ClientTable data={data} fetchClient={fetchClients} />
-      <div className='flex items-center justify-end'>
+      <div className="flex items-center justify-end">
         <Pagination
           defaultCurrent={pagination?.currentPage}
           total={pagination?.totalResults}
